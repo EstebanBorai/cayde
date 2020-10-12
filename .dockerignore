@@ -1,0 +1,6 @@
+.nvmrc
+src/
+docs/
+LICENSE
+package.json
+yarn.lock
