@@ -93,5 +93,22 @@ export default async function (fastify: FastifyInstance) {
     }
 
     return makeErrorResponse(404, `There was an error updating the ingredient with id: ${ingredientId}`)
+  });
+
+  fastify.delete('/:id', async (request: FastifyRequest<{
+    Params: {
+      id: string
+    }
+  }>, reply: FastifyReply) => {
+    const ingredientId = request.params.id;
+    const ingredient = db[ingredientId];
+
+    if (ingredient) {
+      delete db[ingredientId];
+      return ingredient;
+    }
+
+    reply.status(400);
+    return makeErrorResponse(400, `Ingredient with id: ${ingredientId} doesn't exists`);
   })
 }
