@@ -1,1 +1,1 @@
-export { default as ingredients } from './ingredients/routes';
+export { ingredients, units } from './ingredients/routes';
