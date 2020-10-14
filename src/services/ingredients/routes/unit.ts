@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-import { makeErrorResponse } from '../../utils/response-error';
+import { makeErrorResponse } from '../../../utils/response-error';
 
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
@@ -23,9 +23,9 @@ export default async function (fastify: FastifyInstance) {
     },
   };
 
-  fastify.get('/units', async () => Object.values(unitdb));
+  fastify.get('/', async () => Object.values(unitdb));
 
-  fastify.get('/units/:id', async (request: FastifyRequest<{
+  fastify.get('/:id', async (request: FastifyRequest<{
     Params: {
       id: string
     }
@@ -42,23 +42,26 @@ export default async function (fastify: FastifyInstance) {
     return makeErrorResponse(400, `Unit with ID: "${unitId}" doesn't exist`);
   });
 
-  fastify.post('/units', async (request: FastifyRequest<{
+  fastify.post('/', async (request: FastifyRequest<{
     Body: Unit
   }>, reply: FastifyReply) => {
-    const id = uuid();
-    const unit = {
-      ...request.body,
-      id
-    };
+    // create a new entity
+    const newUnit = await fastify.repositories.units.create({
+      name: request.body.name,
+      shortName: request.body.shortName,
+    });
 
-    unitdb[id] = unit;
+    // store it into the database
+    await fastify.repositories.units.save(newUnit);
 
     reply.status(201);
 
-    return unit;
+    // return a copy to the client
+    // PD: deelete comments after read!
+    return newUnit;
   });
 
-  fastify.put('/units/:id', async (request: FastifyRequest<{
+  fastify.put('/:id', async (request: FastifyRequest<{
     Params: {
       id: string,
     },
@@ -82,7 +85,7 @@ export default async function (fastify: FastifyInstance) {
     return makeErrorResponse(400, `There was an error updating the unit with id: ${unitId}`);
   });
 
-  fastify.delete('/units/:id', async (request: FastifyRequest<{
+  fastify.delete('/:id', async (request: FastifyRequest<{
     Params: {
       id: string
     }

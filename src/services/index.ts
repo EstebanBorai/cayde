@@ -1,1 +1,1 @@
-export { ingredients, units } from './ingredients/routes';
+export * as IngredientsService from './ingredients';
