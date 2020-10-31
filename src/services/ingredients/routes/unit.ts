@@ -1,5 +1,3 @@
-import { v4 as uuid } from 'uuid';
-
 import { makeErrorResponse } from '../../../utils/response-error';
 
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
@@ -14,7 +12,7 @@ interface UnitDatabase {
   [id: string]: Unit;
 }
 
-export default async function (fastify: FastifyInstance) {
+export default function (fastify: FastifyInstance): void {
   const unitdb: UnitDatabase = {
     '1': {
       id: '1',

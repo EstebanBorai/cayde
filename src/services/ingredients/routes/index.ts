@@ -3,7 +3,7 @@ import units from './unit';
 
 import type { FastifyInstance } from 'fastify';
 
-export default async function (fastify: FastifyInstance) {
+export default function (fastify: FastifyInstance): void {
   fastify.register(units, {
     prefix: '/units'
   });

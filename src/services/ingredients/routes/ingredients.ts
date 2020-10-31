@@ -17,8 +17,7 @@ interface IngredientsDatabase {
   [id: string]: Ingredient;
 }
 
-export default async function (fastify: FastifyInstance) {
-
+export default function (fastify: FastifyInstance): void {
   const db: IngredientsDatabase = {
     'abc': {
       id: 'abc',

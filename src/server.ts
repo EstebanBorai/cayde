@@ -1,13 +1,15 @@
+import fastify from 'fastify';
+
 import { IngredientsService } from './services';
 import typeormPlugin from './plugins/typeorm';
 
 import type { FastifyInstance } from 'fastify';
 
-const fastify: FastifyInstance = require('fastify')({
+const server: FastifyInstance = fastify({
   logger: true
 });
 
-fastify.register(typeormPlugin, {
+server.register(typeormPlugin, {
   connectionOptions: {
     type: 'postgres',
     host: '127.0.0.1',
@@ -23,15 +25,15 @@ fastify.register(typeormPlugin, {
   }
 });
 
-fastify.register(IngredientsService.router, {
+server.register(IngredientsService.router, {
   prefix: 'api/v1'
 });
 
-fastify.listen(3000, function (err, address) {
+server.listen(3000, function (err, address) {
   if (err) {
-    fastify.log.error(err);
+    server.log.error(err);
     process.exit(1);
   }
 
-  fastify.log.info(`Serve listening on ${address}`);
+  server.log.info(`Serve listening on ${address}`);
 });
