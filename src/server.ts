@@ -21,7 +21,8 @@ server.register(typeormPlugin, {
     logging: false
   },
   entities: {
-    units: IngredientsService.models.Unit
+    units: IngredientsService.models.Unit,
+    ingredients: IngredientsService.models.Ingredient
   }
 });
 

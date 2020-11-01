@@ -1,11 +1,9 @@
-import { v4 as uuid } from 'uuid';
-
 import { makeErrorResponse } from '../../../utils/response-error';
 
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type { Unit } from './unit';
 
-interface Ingredient {
+export interface Ingredient {
   id: string;
   name: string;
   unit: Unit;
@@ -13,83 +11,105 @@ interface Ingredient {
   price: number;
 }
 
-interface IngredientsDatabase {
-  [id: string]: Ingredient;
-}
+export default async function (fastify: FastifyInstance) {
+  fastify.get('/', async (_, reply: FastifyReply) => {
+    try {
+      const ingredients = await fastify.repositories.ingredients.find({ relations: ["unit"] });
 
-export default function (fastify: FastifyInstance): void {
-  const db: IngredientsDatabase = {
-    'abc': {
-      id: 'abc',
-      name: 'Butter',
-      unit: {
-        id: 'def',
-        name: 'kilograms',
-        shortName: 'kg'
-      },
-      quantity: 200,
-      price: 3.50
+      reply.status(200);
+
+      return ingredients;
+    } catch (e) {
+      reply.status(500);
+
+      fastify.log.error(e);
+
+      return makeErrorResponse(500, 'There was an error getting the ingredients');
     }
-  };
-
-  fastify.get('/', async () => Object.values(db));
+  });
 
   fastify.get('/:id', async (request: FastifyRequest<{
     Params: {
       id: string
     }
   }>, reply: FastifyReply) => {
-    const ingredientId = request.params.id;
-    const ingredient = db[ingredientId];
+    try {
+      const ingredient = await fastify.repositories.ingredients.findOne(
+        request.params.id
+      );
 
-    if (ingredient) {
-      return ingredient;
+      if (ingredient) {
+        return ingredient;
+      }
+
+      reply.status(400);
+
+      return makeErrorResponse(400, `Ingredient with ID: "${request.params.id}" doesn't exist`);
+    } catch (e) {
+      reply.status(500);
+
+      fastify.log.error(e);
+
+      return makeErrorResponse(500, `There was an internal error`);
     }
-
-    reply.status(400);
-
-    return makeErrorResponse(400, `Ingredient with ID: "${ingredientId}" doesn't exist`);
   });
 
   fastify.post('/', async (request: FastifyRequest<{
     Body: Ingredient
   }>, reply: FastifyReply) => {
-    const id = uuid();
-    const ingredient = {
-      ...request.body,
-      id
-    };
+    const { name, unit, quantity, price } = request.body;
+    try {
+      const newIngredient = await fastify.repositories.ingredients.create({
+        name,
+        unit,
+        quantity,
+        price,
+      });
 
-    db[id] = ingredient;
+      await fastify.repositories.ingredients.save(newIngredient);
 
-    reply.status(201);
+      reply.status(201);
 
-    return ingredient;
+      return newIngredient;
+    } catch (e) {
+      reply.status(500);
+
+      fastify.log.error(e);
+
+      return makeErrorResponse(500, 'There was an error creating a new ingredient');
+    }
   });
 
   fastify.put('/:id', async (request: FastifyRequest<{
     Params: {
-      id: string,
-    }
-    Body: Ingredient
+      id: string
+    }, 
+    Body: Ingredient 
   }>, reply: FastifyReply) => {
-    const ingredientId = request.params.id;
-    const ingredient = db[ingredientId];
+    try {
+      const ingredient = await fastify.repositories.ingredients.findOne({
+        where: { id: request.params.id },
+      });
 
-    if (ingredient) {
-      const updatedIngredient = {
-        ...request.body
-      };
+      if (ingredient) {
+        await fastify.repositories.ingredients.update(ingredient, request.body);
 
-      db[ingredientId] = updatedIngredient
+        reply.status(200);
 
-      reply.status(200)
-      return updatedIngredient
+        return ingredient;
+      }
+
+      reply.status(400);
+
+      return makeErrorResponse(400, `There was an error updating the ingredient with id: ${request.params.id}`);
+      
+    } catch (e) {
+      reply.status(500);
+
+      fastify.log.error(e);
+
+      return makeErrorResponse(500, `There was an internal error`);
     }
-
-    reply.status(400);
-
-    return makeErrorResponse(400, `There was an error updating the ingredient with id: ${ingredientId}`)
   });
 
   fastify.delete('/:id', async (request: FastifyRequest<{
@@ -97,16 +117,18 @@ export default function (fastify: FastifyInstance): void {
       id: string
     }
   }>, reply: FastifyReply) => {
-    const ingredientId = request.params.id;
-    const ingredient = db[ingredientId];
+    try {
+      const ingredientDeleted = await fastify.repositories.ingredients.delete(request.params.id);
 
-    if (ingredient) {
-      delete db[ingredientId];
-      return ingredient;
+      reply.status(200);
+
+      return ingredientDeleted;
+    } catch (e) {
+      reply.status(500);
+
+      fastify.log.error(e);
+
+      return makeErrorResponse(500, `There was an internal error`);
     }
-
-    reply.status(400);
-    return makeErrorResponse(400, `Ingredient with id: ${ingredientId} doesn't exists`);
   });
-
 }

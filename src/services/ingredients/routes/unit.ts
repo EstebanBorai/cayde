@@ -1,5 +1,4 @@
 import { makeErrorResponse } from '../../../utils/response-error';
-
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 
 export interface Unit {
@@ -8,55 +7,69 @@ export interface Unit {
   shortName: string;
 }
 
-interface UnitDatabase {
-  [id: string]: Unit;
-}
+export default async function (fastify: FastifyInstance) {
 
-export default function (fastify: FastifyInstance): void {
-  const unitdb: UnitDatabase = {
-    '1': {
-      id: '1',
-      name: 'kilograms',
-      shortName: 'kg',
-    },
-  };
+  fastify.get('/', async (_, reply: FastifyReply) => {
+    try {
+      const units = await fastify.repositories.units.find();
 
-  fastify.get('/', async () => Object.values(unitdb));
+      reply.status(200);
+
+      return units;
+    } catch (e) {
+      reply.status(500);
+
+      fastify.log.error(e);
+
+      return makeErrorResponse(500, `There was an error getting the units`);
+    }
+  });
 
   fastify.get('/:id', async (request: FastifyRequest<{
     Params: {
       id: string
     }
   }>, reply: FastifyReply) => {
-    const unitId = request.params.id;
-    const unit = unitdb[unitId];
+    try {
+      const unit = await fastify.repositories.units.findOne(request.params.id);
 
-    if (unit) {
-      return unit;
+      if (unit) {
+        return unit;
+      }
+
+      return makeErrorResponse(400, `Unit with ID: "${request.params.id}" doesn't exist`);
+
+    } catch (e) {
+      reply.status(500);
+
+      fastify.log.error(e);
+
+      return makeErrorResponse(500, 'There was an error getting Unit');
     }
-
-    reply.status(400)
-
-    return makeErrorResponse(400, `Unit with ID: "${unitId}" doesn't exist`);
   });
 
   fastify.post('/', async (request: FastifyRequest<{
     Body: Unit
   }>, reply: FastifyReply) => {
-    // create a new entity
-    const newUnit = await fastify.repositories.units.create({
-      name: request.body.name,
-      shortName: request.body.shortName,
-    });
+    const { name, shortName } = request.body;
+    try {
+      const newUnit = await fastify.repositories.units.create({
+        name,
+        shortName,
+      });
 
-    // store it into the database
-    await fastify.repositories.units.save(newUnit);
+      await fastify.repositories.units.save(newUnit);
 
-    reply.status(201);
+      reply.status(201);
 
-    // return a copy to the client
-    // PD: deelete comments after read!
-    return newUnit;
+      return newUnit;
+    } catch (e) {
+      reply.status(500);
+
+      fastify.log.error(e);
+
+      return makeErrorResponse(500, 'There was an internal error');
+    }
   });
 
   fastify.put('/:id', async (request: FastifyRequest<{
@@ -65,22 +78,31 @@ export default function (fastify: FastifyInstance): void {
     },
     Body: Unit
   }>, reply: FastifyReply) => {
-    const unitId = request.params.id;
-    const unit = unitdb[unitId];
+    try {
+      const unit = await fastify.repositories.units.findOne(({
+        where: { id: request.params.id }
+      }));
+      
+      if (unit) {        
+        await fastify.repositories.units.update(unit, request.body);
 
-    if (unit) {
-      const updatedUnit = {
-        ...request.body,
-        id: unitId
-      };
+        reply.status(200);
 
-      unitdb[unitId] = updatedUnit;
-      reply.status(200);
+        return unit;
+      }
+      
+      reply.status(400);
 
-      return updatedUnit;
+      return makeErrorResponse(400, `There was an error updating the unit with id: ${request.params.id}`);
+      
+    } catch (e) {
+      reply.status(500);
+
+      fastify.log.error(e);
+
+      return makeErrorResponse(500, `There was an internal error`);
     }
 
-    return makeErrorResponse(400, `There was an error updating the unit with id: ${unitId}`);
   });
 
   fastify.delete('/:id', async (request: FastifyRequest<{
@@ -88,17 +110,19 @@ export default function (fastify: FastifyInstance): void {
       id: string
     }
   }>, reply: FastifyReply) => {
-    const unitId = request.params.id;
-    const unit = unitdb[unitId];
+    try {
+      const unitDeleted = await fastify.repositories.units.delete(request.params.id);
 
-    if (unit) {
-      delete unitdb[unitId];
-      return unit;
+      reply.status(200);
+
+      return unitDeleted;
+    } catch (e) {
+      reply.status(500);
+
+      fastify.log.error(e);
+
+      return makeErrorResponse(500, `There was an internal error`);
     }
-
-    reply.status(400);
-
-    return makeErrorResponse(400, `Unit with id: ${unitId} doesn't exists`);
   });
 
-} 
+}
