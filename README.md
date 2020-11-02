@@ -1,9 +1,13 @@
-# cupboard-monolith
-Cupboard POC Application for a Monolith in Fastify
+<div align="center">
+  <img src="https://camo.githubusercontent.com/734a3468bce992fbc3b729562d41c92f4912c99a/68747470733a2f2f7777772e727573742d6c616e672e6f72672f7374617469632f696d616765732f727573742d6c6f676f2d626c6b2e737667" height="120" width="120" />
+  <h1>whizzes-server</h1>
+  <h4 align="center">Back-End development for whizzes a social network application inspired on Reddit and Twitter</h4>
+</div>
 
 ## Motivation
 
-Write an REST API implementing the _Monolithic architecture_ with Fastify.
+The main goal of this project is to design and develop a social network
+application inspired on Twitter and Reddit.
 
 ## Architecture
 
@@ -22,18 +26,21 @@ Write an REST API implementing the _Monolithic architecture_ with Fastify.
 This application is written using the [Loose Coupling](https://en.wikipedia.org/wiki/Loose_coupling)
 architechture pattern (also called _system design_).
 
-Each component of the application (_ingredients service_, _recipes service_ or _user service_) will have
-its own models, routes and business logic related files.
+Each component of the application (_user service_, _post service_) will have
+its own models, routes and business logic related files in a single directory.
 
-Reusable logic, such as database connection is exposed at the first level of the project scaffold.
+Reusable logic, such as database connection is exposed at the root level of
+the project module tree.
 
 ```
 .
-├── ingredients
+├── server.ts
+├── database.ts
+├── service-name-1\
 |   ├──index.ts
 |   ├──routes.ts
 |   └── models.ts
-├── recipes
+├── service-name-2\
 |   ├──index.ts
 |   ├──routes.ts
 |   └── models.ts
@@ -41,13 +48,24 @@ Reusable logic, such as database connection is exposed at the first level of the
 
 ## Database
 
-The database is served through Docker. To run the database execute the `scripts/docker-run.sh` script.
+The database is served through Docker. To run the database execute the
+`scripts/docker-run` script.
 
 ```bash
-bash ./scripts/docker-run.sh
+./scripts/docker-run
 ```
 
-This script will create a volume for the database (cupboard-api-volume), and then will
-attempt to build the `Dockefile` in the root directory of the project.
+This script will create a volume for the database (cupboard-api-volume),
+and then will attempt to build the `Dockefile` in the root directory of
+the project.
 
 Finally will execute this image exposing it in the localhost on port 5432.
+
+## Contributing
+
+Contributions of any kind are welcome and would be awesome, ideas, bug fixes,
+reports, feedback and improvements are always welcome!
+
+## License
+
+Licensed under the MIT License.
