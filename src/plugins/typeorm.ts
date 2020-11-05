@@ -12,7 +12,8 @@ interface TypeORMPluginOptions {
 
 async function typeorm(
   fastify: FastifyInstance,
-  options: TypeORMPluginOptions
+  options: TypeORMPluginOptions,
+  done
 ) {
   try {
     const hasEntities = options.entities && Object.values(options.entities);
@@ -35,8 +36,14 @@ async function typeorm(
 
     fastify.decorate('repositories', mappedRepositores);
   } catch (error) {
-    fastify.log.error('Unable to connect to the database', error);
+    fastify.log.error('Unable to connect to the database');
+    fastify.log.error(error);
+  } finally {
+    done();
   }
 }
 
-export default fp(typeorm);
+export default fp(typeorm, {
+  fastify: '3.x',
+  name: 'typeorm-fastify-plugin'
+});

@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="https://camo.githubusercontent.com/734a3468bce992fbc3b729562d41c92f4912c99a/68747470733a2f2f7777772e727573742d6c616e672e6f72672f7374617469632f696d616765732f727573742d6c6f676f2d626c6b2e737667" height="120" width="120" />
+  <img src="https://raw.githubusercontent.com/EstebanBorai/whizzes-server/main/assets/logo.png" height="120" width="120" />
   <h1>whizzes-server</h1>
   <h4 align="center">Back-End development for whizzes a social network application inspired on Reddit and Twitter</h4>
 </div>
@@ -8,18 +8,6 @@
 
 The main goal of this project is to design and develop a social network
 application inspired on Twitter and Reddit.
-
-## Architecture
-
-<div align="center">
-  <img src="https://raw.githubusercontent.com/easycodex/cupboard-monolith/main/docs/flowchart.png" alt="Flowchart" width="600" />
-</div>
-
-## Entities
-
-<div align="center">
-  <img src="https://raw.githubusercontent.com/easycodex/cupboard-monolith/main/docs/entities.png" alt="Entities" width="600" />
-</div>
 
 ## Project Scaffold
 

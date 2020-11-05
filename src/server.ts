@@ -1,6 +1,7 @@
 import fastify from 'fastify';
 
-import { IngredientsService } from './services';
+import router from './router';
+import services from './services';
 import typeormPlugin from './plugins/typeorm';
 
 import type { FastifyInstance } from 'fastify';
@@ -14,27 +15,23 @@ server.register(typeormPlugin, {
     type: 'postgres',
     host: '127.0.0.1',
     port: 5432,
-    username: 'cupboard_api',
-    password: 'cupboard_api',
-    database: 'cupboard_api',
+    username: 'whizzes',
+    password: 'whizzes',
+    database: 'whizzes',
     synchronize: true,
-    logging: false
+    logging: true
   },
   entities: {
-    units: IngredientsService.models.Unit,
-    ingredients: IngredientsService.models.Ingredient
+    posts: services.postService.model,
+    users: services.userService.model
   }
 });
 
-server.register(IngredientsService.router, {
-  prefix: 'api/v1'
-});
+server.register(router);
 
-server.listen(3000, function (err, address) {
+server.listen(3000, function (err) {
   if (err) {
     server.log.error(err);
     process.exit(1);
   }
-
-  server.log.info(`Serve listening on ${address}`);
 });

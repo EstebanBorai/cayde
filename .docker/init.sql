@@ -1,3 +1,3 @@
-GRANT ALL PRIVILEGES ON DATABASE cupboard_api TO cupboard_api;
+GRANT ALL PRIVILEGES ON DATABASE whizzes TO whizzes;
 
 CREATE EXTENSION IF NOT EXISTS "uuid-ossp";

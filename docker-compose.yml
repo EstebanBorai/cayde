@@ -8,9 +8,9 @@ services:
     volumes:
        - db-data:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: "cupboard_api"
-      POSTGRES_PASSWORD: "cupboard_api"
-      POSTGRES_DB: "cupboard_api"
+      POSTGRES_USER: "whizzes"
+      POSTGRES_PASSWORD: "whizzes"
+      POSTGRES_DB: "whizzes"
 
 volumes:
   db-data:
