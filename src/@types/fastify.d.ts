@@ -1,11 +1,11 @@
 import type { Repository } from 'typeorm';
-import type { Whizzes } from './whizzes';
 
 declare module 'fastify' {
   interface FastifyInstance {
     repositories: {
-      posts: Repository<Whizzes.Post>;
-      users: Repository<Whizzes.User>;
+      posts: Repository<Whizzes.Posts.Post>;
+      users: Repository<Whizzes.Users.User>;
+      secrets: Repository<Whizzes.Auth.Secret>;
     }
   }
 }

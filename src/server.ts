@@ -23,7 +23,8 @@ server.register(typeormPlugin, {
   },
   entities: {
     posts: services.postService.model,
-    users: services.userService.model
+    users: services.userService.model,
+    secrets: services.authService.model,
   }
 });
 
