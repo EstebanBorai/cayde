@@ -4,12 +4,25 @@
   <h4 align="center">Back-End development for whizzes a social network application inspired on Reddit and Twitter</h4>
 </div>
 
+## Index
+
+* [Motivation](#motivation)
+* [Architechture](#architecture)
+  * [Project Scaffold](#project-scaffold)
+* [Development](#development)
+  * [Database](#database)
+  * [Environment Variables](#environment-variables)
+* [Contributing](#contributing)
+* [License](#license)
+
 ## Motivation
 
 The main goal of this project is to design and develop a social network
 application inspired on Twitter and Reddit.
 
-## Project Scaffold
+## Architecture
+
+### Project Scaffold
 
 This application is written using the [Loose Coupling](https://en.wikipedia.org/wiki/Loose_coupling)
 architechture pattern (also called _system design_).
@@ -34,20 +47,36 @@ the project module tree.
 |   └── models.ts
 ```
 
-## Database
+## Development
+
+### Database
 
 The database is served through Docker. To run the database execute the
 `scripts/docker-run` script.
 
 ```bash
-./scripts/docker-run
+./scripts/docker-start
 ```
 
 This script will create a volume for the database (cupboard-api-volume),
 and then will attempt to build the `Dockefile` in the root directory of
 the project.
 
-Finally will execute this image exposing it in the localhost on port 5432.
+Finally will execute this image exposing it in the localhost on port `5432`.
+
+### Environment Variables
+
+Create a `.env` file on the root directory with the following
+environment variables.
+
+A `.env.sample` file is also available with predefined values for simplicity.
+
+| Name                  | Description                      |
+| --------------------- | ---------------------------------|
+| `PORT`                | HTTP Port for the server         |
+| `POSTGRES_USER`       | PostgreSQL connection username   |
+| `POSTGRES_PASSWORD`   | PostgreSQL connection password   |
+| `POSTGRES_DB`         | PostgreSQL connection database   |
 
 ## Contributing
 
