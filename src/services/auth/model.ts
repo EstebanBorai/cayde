@@ -12,6 +12,6 @@ export default class Secret extends BaseModel {
   hash: string;
 
   @OneToOne(() => User)
-  @JoinColumn()
+  @JoinColumn({ name: 'user_id' })
   user: User;
 }

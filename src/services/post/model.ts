@@ -1,4 +1,4 @@
-import { Entity, Column, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, JoinColumn, PrimaryGeneratedColumn } from 'typeorm';
 
 import { BaseModel } from '../core';
 import { model as User } from '../user';
@@ -12,5 +12,6 @@ export default class Post extends BaseModel {
   content: string;
 
   @ManyToOne(() => User, user => user.posts)
+  @JoinColumn({ name: 'user_id' })
   user: User;
 }
