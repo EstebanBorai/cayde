@@ -1,4 +1,5 @@
 import fastify from 'fastify';
+import fastifyJwt from 'fastify-jwt';
 import { config as readEnvFile } from 'dotenv';
 
 import router from './router';
@@ -11,7 +12,7 @@ if (process.env.ENVIRONMENT === 'development') {
   readEnvFile();
 }
 
-const { PORT, POSTGRES_DB, POSTGRES_PASSWORD, POSTGRES_USER } = process.env;
+const { JWT_SECRET, PORT, POSTGRES_DB, POSTGRES_PASSWORD, POSTGRES_USER } = process.env;
 
 const server: FastifyInstance = fastify({
   logger: true
@@ -33,6 +34,10 @@ server.register(typeormPlugin, {
     users: services.userService.model,
     secrets: services.authService.model,
   }
+});
+
+server.register(fastifyJwt, {
+  secret: JWT_SECRET,
 });
 
 server.register(router);

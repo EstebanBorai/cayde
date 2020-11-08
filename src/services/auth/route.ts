@@ -1,5 +1,6 @@
-import { crypto, validate } from './utils';
+import { crypto, validate, basicAuth } from './utils';
 import { getManager } from 'typeorm';
+
 
 import type { FastifyInstance, FastifyRegisterOptions, FastifyReply, DoneFuncWithErrOrRes, FastifyRequest } from 'fastify';
 
@@ -15,30 +16,11 @@ function routes(fastify: FastifyInstance, _: FastifyRegisterOptions<unknown>, do
       });
     }
 
-    const [kind, token] = authorizationHeader.split(' ');
-
-    if (kind.toLowerCase() !== 'basic') {
-      reply.status(400);
-
-      return reply.send({
-        message: 'invalid "Authorization" header'
-      });
-    }
-
-    const buff = Buffer.from(token, 'base64');
-    const decodedCredentials = buff.toString('ascii').split(':');
-
-    if (!decodedCredentials.length) {
-      reply.status(400);
-
-      return reply.send({
-        message: 'invalid "Authorization" header'
-      });
-    }
+    const credentials = basicAuth(authorizationHeader);
 
     const user = await fastify.repositories.users.findOneOrFail({
       where: {
-        name: decodedCredentials[0],
+        name: credentials.userId,
       }
     });
 
@@ -50,12 +32,14 @@ function routes(fastify: FastifyInstance, _: FastifyRegisterOptions<unknown>, do
       }
     });
 
-    const isOk = await crypto.verify(decodedCredentials[1], passwordHash);
+    const isOk = await crypto.verify(credentials.password, passwordHash);
 
     if (isOk) {
+      const token = fastify.jwt.sign({name: user.name});
+
       reply.status(200);
 
-      return reply.send(user);
+      return reply.send({ token });
     }
 
     reply.status(403);
