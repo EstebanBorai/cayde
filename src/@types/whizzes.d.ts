@@ -4,6 +4,12 @@ declare namespace Whizzes {
     updatedAt: Date;
   }
 
+  interface TokenPayload {
+    user: {
+      name: string;
+    }
+  }
+
   namespace Users {
     interface User extends Entity {
       id: string;

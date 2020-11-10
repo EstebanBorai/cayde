@@ -5,7 +5,9 @@ import type { DoneFuncWithErrOrRes, FastifyInstance, FastifyRegisterOptions, Fas
 export default function (fastify: FastifyInstance, _: FastifyRegisterOptions<unknown>, done: DoneFuncWithErrOrRes): void {
   fastify.addHook('preValidation', async (request: FastifyRequest, reply: FastifyReply) => {
     try {
-      await request.jwtVerify()
+      const tokenPayload: Whizzes.TokenPayload = await request.jwtVerify();
+
+      fastify.token = tokenPayload;
     } catch (err) {
       reply.send(err)
     }

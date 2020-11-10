@@ -35,7 +35,13 @@ function routes(fastify: FastifyInstance, _: FastifyRegisterOptions<unknown>, do
     const isOk = await crypto.verify(credentials.password, passwordHash);
 
     if (isOk) {
-      const token = fastify.jwt.sign({name: user.name});
+      const payload: Whizzes.TokenPayload = {
+        user: {
+          name: user.name
+        }
+      };
+
+      const token = fastify.jwt.sign(payload);
 
       reply.status(200);
 
@@ -84,8 +90,8 @@ function routes(fastify: FastifyInstance, _: FastifyRegisterOptions<unknown>, do
         const newUser = fastify.repositories.users.create({
           firstName: payload.firstName,
           surname: payload.surname,
-          name: payload.name,
-          email: payload.email,
+          name: payload.name.toLowerCase(),
+          email: payload.email.toLowerCase(),
         });
 
         await transactionalManager.save(newUser);

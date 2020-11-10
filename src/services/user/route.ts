@@ -1,30 +1,23 @@
 import type { FastifyInstance, FastifyReply, FastifyRequest, DoneFuncWithErrOrRes, FastifyRegisterOptions } from 'fastify';
 
 function routes(fastify: FastifyInstance, _: FastifyRegisterOptions<unknown>, done: DoneFuncWithErrOrRes) {
-  fastify.get('/', async (_: FastifyRequest, reply: FastifyReply) => {
-    try {
-      return fastify.repositories.users.find();
-    } catch (error) {
-      return reply.status(500).send({
-        message: 'An error ocurred users',
-        error
-      });
+  fastify.get('/:name', async (request: FastifyRequest<{
+    Params: {
+      name: string
     }
-  });
-
-  fastify.post('/', async (request: FastifyRequest, reply: FastifyReply) => {
+  }>, reply: FastifyReply) => {
     try {
-      // we should validate this user in the future
-      // and if invalid return 400 (Bad Request) instead
-      const user = request.body;
-      const created = await fastify.repositories.users.create(user);
+      const name = request.params.name;
+      const user = await fastify.repositories.users.findOneOrFail({
+        where: {
+          name
+        }
+      });
 
-      await fastify.repositories.users.save(created);
-
-      return reply.status(201).send(created);
+      return user;
     } catch (error) {
       return reply.status(500).send({
-        message: 'An error ocurred creating user',
+        message: `An error ocurred fetching the user with name: ${request.params.name}`,
         error
       });
     }
