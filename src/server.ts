@@ -1,5 +1,6 @@
 import fastify from 'fastify';
 import fastifyJwt from 'fastify-jwt';
+import cors from 'fastify-cors'
 import { config as readEnvFile } from 'dotenv';
 
 import router from './router';
@@ -34,6 +35,11 @@ server.register(typeormPlugin, {
     users: services.userService.model,
     secrets: services.authService.model,
   }
+});
+
+server.register(cors, {
+  origin: '*',
+  methods: ['GET', 'POST']
 });
 
 server.register(fastifyJwt, {
