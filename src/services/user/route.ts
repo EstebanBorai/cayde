@@ -23,6 +23,23 @@ function routes(fastify: FastifyInstance, _: FastifyRegisterOptions<unknown>, do
     }
   });
 
+  fastify.get('/:name/posts', async (request: FastifyRequest<{ Params: { name: string; } }>, reply: FastifyReply) => {
+    try {
+      const name = request.params.name;
+      const user = await fastify.repositories.users.findOneOrFail({
+        relations: ['posts'],
+        where: { name }
+      });
+
+      return user.posts;
+    } catch (error) {
+      return reply.status(500).send({
+        message: 'An error ocurred users',
+        error
+      });
+    }
+  });
+
   done();
 }
 

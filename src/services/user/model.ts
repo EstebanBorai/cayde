@@ -27,6 +27,6 @@ export default class User extends BaseModel {
   @Column({ name: 'follower_count', default: 0 })
   followerCount: number;
 
-  @OneToMany(() => Post, post => post.user)
+  @OneToMany(() => Post, post => post.author)
   posts: Post[];
 }

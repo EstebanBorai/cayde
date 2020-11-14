@@ -11,7 +11,7 @@ export default class Post extends BaseModel {
   @Column()
   content: string;
 
-  @ManyToOne(() => User, user => user.posts)
+  @ManyToOne(() => User, user => user.posts, { nullable: false })
   @JoinColumn({ name: 'user_id' })
-  user: User;
+  author: User;
 }
