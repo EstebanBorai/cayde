@@ -8,5 +8,6 @@ declare module 'fastify' {
       users: Repository<Whizzes.Users.User>;
       secrets: Repository<Whizzes.Auth.Secret>;
     }
+    whipeDatabase: () => void;
   }
 }
