@@ -77,6 +77,7 @@ A `.env.sample` file is also available with predefined values for simplicity.
 | `POSTGRES_USER`       | PostgreSQL connection username   |
 | `POSTGRES_PASSWORD`   | PostgreSQL connection password   |
 | `POSTGRES_DB`         | PostgreSQL connection database   |
+| `JWT_SECRET`          | Secret to sign JWT tokens with   |
 
 ## Contributing
 
