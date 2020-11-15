@@ -20,7 +20,7 @@ export default class User extends BaseModel {
   @Column({ length: 100, name: 'surname', nullable: false })
   surname: string;
 
-  @ManyToMany(() => User)
+  @ManyToMany(() => User, user => user.follows)
   @JoinTable()
   follows: User[];
 
