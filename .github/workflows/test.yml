@@ -1,4 +1,4 @@
-name: lint
+name: test
 
 on:
   pull_request:
@@ -7,8 +7,8 @@ on:
       - main
 
 jobs:
-  eslint:
-    name: ESLint
+  test:
+    name: Test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -19,5 +19,5 @@ jobs:
       - name: Install dependencies
         run: yarn install --frozen-lockfile
 
-      - name: Run ESLint
-        run: yarn eslint
+      - name: Runs "yarn test"
+        run: yarn test
