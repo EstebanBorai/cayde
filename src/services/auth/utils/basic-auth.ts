@@ -3,7 +3,7 @@ interface BasicAuth {
   password: string;
 }
 
-function basicAuth (httpHeader:string): BasicAuth {
+function basicAuth(httpHeader: string): BasicAuth {
   const [kind, token] = httpHeader.split(' ');
 
   if (kind.toLocaleLowerCase() !== 'basic') {
@@ -14,13 +14,13 @@ function basicAuth (httpHeader:string): BasicAuth {
   const decodeCredentials = buff.toString('ascii').split(':');
 
   if (decodeCredentials.length !== 2) {
-    throw new Error ('invalid "Authorization" header');
+    throw new Error('invalid "Authorization" header');
   }
 
   return {
     userId: decodeCredentials[0],
     password: decodeCredentials[1],
-  }
+  };
 }
 
 export default basicAuth;

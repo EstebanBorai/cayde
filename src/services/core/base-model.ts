@@ -10,7 +10,7 @@ class BaseModel {
     nullable: false,
     readonly: true,
     default: () => '0',
-    transformer: timestamp
+    transformer: timestamp,
   })
   createdAt: Date;
 
@@ -20,7 +20,7 @@ class BaseModel {
     width: 11,
     nullable: true,
     default: () => null,
-    transformer: timestamp
+    transformer: timestamp,
   })
   updatedAt?: Date;
 

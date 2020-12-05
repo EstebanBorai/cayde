@@ -7,7 +7,10 @@ import path from 'path';
 import type { FastifyInstance } from 'fastify';
 import type { ConnectionOptions, Repository, EntitySchema } from 'typeorm';
 
-const WHIZZES_SERVER_TEST_DATABASE_PATH: string = path.join(process.cwd(), 'test/tmp/whizzes-server-test.sqlite');
+const WHIZZES_SERVER_TEST_DATABASE_PATH: string = path.join(
+  process.cwd(),
+  'test/tmp/whizzes-server-test.sqlite',
+);
 
 const deleteDbFile = (): void => {
   console.warn('===========================================');
@@ -16,7 +19,9 @@ const deleteDbFile = (): void => {
 
   fs.rm(WHIZZES_SERVER_TEST_DATABASE_PATH, (error) => {
     if (error) {
-      console.error(`An error ocurred deleting file on ${WHIZZES_SERVER_TEST_DATABASE_PATH}`);
+      console.error(
+        `An error ocurred deleting file on ${WHIZZES_SERVER_TEST_DATABASE_PATH}`,
+      );
       console.error(error);
     }
   });
@@ -27,7 +32,9 @@ interface TypeORMPluginOptions {
   entities: Record<string, unknown>;
 }
 
-const makeConnectionOptions = (connectionOptions: ConnectionOptions): ConnectionOptions => {
+const makeConnectionOptions = (
+  connectionOptions: ConnectionOptions,
+): ConnectionOptions => {
   if (process.env.ENVIRONMENT === 'testing') {
     // if the current ENVIRONMENT is "testing" then we
     // use a SQLite In Memory Database
@@ -47,18 +54,20 @@ const makeConnectionOptions = (connectionOptions: ConnectionOptions): Connection
   }
 
   return connectionOptions;
-}
+};
 
 async function typeorm(
   fastify: FastifyInstance,
   options: TypeORMPluginOptions,
-  done
+  done,
 ) {
   try {
     const hasEntities = options.entities && Object.values(options.entities);
     const connectionOptions: ConnectionOptions = makeConnectionOptions({
       ...options.connectionOptions,
-      entities: (hasEntities ? Object.values(options.entities) : [])  as unknown as EntitySchema<unknown>[]
+      entities: ((hasEntities
+        ? Object.values(options.entities)
+        : []) as unknown) as EntitySchema<unknown>[],
     });
 
     const dbConnection = await createConnection(connectionOptions);
@@ -69,11 +78,13 @@ async function typeorm(
       // to its `EntitySchema` and assign it to the `mappedRepositories` to decorate
       // fastify's instance with the repositories
       Object.keys(options.entities).forEach((entityName) => {
-        mappedRepositores[entityName] = dbConnection.getRepository(options.entities[entityName] as EntitySchema<unknown>);
+        mappedRepositores[entityName] = dbConnection.getRepository(
+          options.entities[entityName] as EntitySchema<unknown>,
+        );
       });
     }
 
-    const whipeDatabase = async () =>{
+    const whipeDatabase = async () => {
       console.warn('===========================================');
       console.warn('===========| Whipping Database |===========');
       console.warn('===========================================');
@@ -93,5 +104,5 @@ async function typeorm(
 
 export default fp(typeorm, {
   fastify: '3.x',
-  name: 'typeorm-fastify-plugin'
+  name: 'typeorm-fastify-plugin',
 });

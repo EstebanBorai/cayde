@@ -4,15 +4,15 @@ services:
   database:
     build: ./docker
     ports:
-      - "5432:5432"
+      - '5432:5432'
     volumes:
-       - whizzes-database:/var/lib/postgresql/data
+      - whizzes-database:/var/lib/postgresql/data
     env_file:
       - .env
     environment:
-      POSTGRES_USER: "${POSTGRES_USER}"
-      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
-      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_USER: '${POSTGRES_USER}'
+      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
+      POSTGRES_DB: '${POSTGRES_DB}'
 
 volumes:
   whizzes-database:

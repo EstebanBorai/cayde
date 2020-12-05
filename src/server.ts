@@ -14,10 +14,16 @@ export function makeServer(): FastifyInstance {
     readEnvFile();
   }
 
-  const { ENVIRONMENT, JWT_SECRET, POSTGRES_DB, POSTGRES_PASSWORD, POSTGRES_USER } = process.env;
+  const {
+    ENVIRONMENT,
+    JWT_SECRET,
+    POSTGRES_DB,
+    POSTGRES_PASSWORD,
+    POSTGRES_USER,
+  } = process.env;
 
   const server: FastifyInstance = fastify({
-    logger: true
+    logger: true,
   });
 
   server.register(typeormPlugin, {
@@ -29,18 +35,18 @@ export function makeServer(): FastifyInstance {
       password: POSTGRES_PASSWORD,
       database: POSTGRES_DB,
       synchronize: true,
-      logging: true
+      logging: true,
     },
     entities: {
       posts: services.postService.model,
       users: services.userService.model,
       secrets: services.authService.model,
-    }
+    },
   });
 
   server.register(cors, {
     origin: '*',
-    methods: ['GET', 'POST']
+    methods: ['GET', 'POST'],
   });
 
   server.register(fastifyJwt, {

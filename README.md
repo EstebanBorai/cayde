@@ -6,15 +6,15 @@
 
 ## Index
 
-* [Motivation](#motivation)
-* [Architechture](#architecture)
-  * [Project Scaffold](#project-scaffold)
-* [Development](#development)
-  * [Requirements](#requirements)
-  * [Getting Started](#getting-started)
-  * [Environment Variables](#environment-variables)
-* [Contributing](#contributing)
-* [License](#license)
+- [Motivation](#motivation)
+- [Architechture](#architecture)
+  - [Project Scaffold](#project-scaffold)
+- [Development](#development)
+  - [Requirements](#requirements)
+  - [Getting Started](#getting-started)
+  - [Environment Variables](#environment-variables)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Motivation
 
@@ -58,9 +58,9 @@ Docker, then you can take advantage of your local PostgreSQL instance
 instead. Its recommended to use Docker because we could introduce
 more external services in the future or _dockerize_ the NodeJS application.
 
-* [Git](https://git-scm.com/downloads)
-* [NodeJS](https://nodejs.org/)
-* [Docker](https://www.docker.com/products/docker-desktop)
+- [Git](https://git-scm.com/downloads)
+- [NodeJS](https://nodejs.org/)
+- [Docker](https://www.docker.com/products/docker-desktop)
 
 ### Getting Started
 
@@ -150,13 +150,13 @@ environment variables.
 
 A `.env.sample` file is also available with predefined values for simplicity.
 
-| Name                  | Description                      |
-| --------------------- | ---------------------------------|
-| `PORT`                | HTTP Port for the server         |
-| `POSTGRES_USER`       | PostgreSQL connection username   |
-| `POSTGRES_PASSWORD`   | PostgreSQL connection password   |
-| `POSTGRES_DB`         | PostgreSQL connection database   |
-| `JWT_SECRET`          | Secret to sign JWT tokens with   |
+| Name                | Description                    |
+| ------------------- | ------------------------------ |
+| `PORT`              | HTTP Port for the server       |
+| `POSTGRES_USER`     | PostgreSQL connection username |
+| `POSTGRES_PASSWORD` | PostgreSQL connection password |
+| `POSTGRES_DB`       | PostgreSQL connection database |
+| `JWT_SECRET`        | Secret to sign JWT tokens with |
 
 ## Contributing
 

@@ -3,157 +3,197 @@ import { getManager } from 'typeorm';
 import User from './model';
 import isFollowing from './utils/is-following';
 
-import type { FastifyInstance, FastifyReply, FastifyRequest, DoneFuncWithErrOrRes, FastifyRegisterOptions } from 'fastify';
+import type {
+  FastifyInstance,
+  FastifyReply,
+  FastifyRequest,
+  DoneFuncWithErrOrRes,
+  FastifyRegisterOptions,
+} from 'fastify';
 
-function routes(fastify: FastifyInstance, _: FastifyRegisterOptions<unknown>, done: DoneFuncWithErrOrRes) {
-  fastify.get('/:name', async (request: FastifyRequest<{
-    Params: {
-      name: string
-    }
-  }>, reply: FastifyReply) => {
-    try {
-      const name = request.params.name;
-      const user = await fastify.repositories.users.findOneOrFail({
-        relations: ['follows'],
-        where: {
-          name
-        }
-      });
-
-      return user;
-    } catch (error) {
-      return reply.status(500).send({
-        message: `An error ocurred fetching the user with name: ${request.params.name}`,
-        error
-      });
-    }
-  });
-
-  fastify.get('/:name/posts', async (request: FastifyRequest<{ Params: { name: string; } }>, reply: FastifyReply) => {
-    try {
-      const name = request.params.name;
-      const user = await fastify.repositories.users.findOneOrFail({
-        relations: ['posts'],
-        where: { name }
-      });
-
-      return user.posts;
-    } catch (error) {
-      return reply.status(500).send({
-        message: 'An error ocurred users',
-        error
-      });
-    }
-  });
-
-  fastify.post('/follow/:name', async (request: FastifyRequest<{ Params: { name: string; } }>, reply: FastifyReply) => {
-    try {
-      if (fastify.token.user.name === request.params.name) {
-        reply.status(400);
-
-        return {
-          message: `You can't follow yourself`
+function routes(
+  fastify: FastifyInstance,
+  _: FastifyRegisterOptions<unknown>,
+  done: DoneFuncWithErrOrRes,
+) {
+  fastify.get(
+    '/:name',
+    async (
+      request: FastifyRequest<{
+        Params: {
+          name: string;
         };
+      }>,
+      reply: FastifyReply,
+    ) => {
+      try {
+        const name = request.params.name;
+        const user = await fastify.repositories.users.findOneOrFail({
+          relations: ['follows'],
+          where: {
+            name,
+          },
+        });
+
+        return user;
+      } catch (error) {
+        return reply.status(500).send({
+          message: `An error ocurred fetching the user with name: ${request.params.name}`,
+          error,
+        });
       }
+    },
+  );
 
-      const [follower, followee] = await Promise.all([
-        fastify.repositories.users.findOneOrFail({
-          where: {
-            name: fastify.token.user.name
-          }
-        }),
-        fastify.repositories.users.findOneOrFail({
-          where: {
-            name: request.params.name,
-          }
-        }),
-      ]);
+  fastify.get(
+    '/:name/posts',
+    async (
+      request: FastifyRequest<{ Params: { name: string } }>,
+      reply: FastifyReply,
+    ) => {
+      try {
+        const name = request.params.name;
+        const user = await fastify.repositories.users.findOneOrFail({
+          relations: ['posts'],
+          where: { name },
+        });
 
-      if (await isFollowing(follower.id, followee.id)) {
-        reply.status(400);
+        return user.posts;
+      } catch (error) {
+        return reply.status(500).send({
+          message: 'An error ocurred users',
+          error,
+        });
+      }
+    },
+  );
 
-        return {
-          message: `${follower.name} already follows ${followee.name}`
+  fastify.post(
+    '/follow/:name',
+    async (
+      request: FastifyRequest<{ Params: { name: string } }>,
+      reply: FastifyReply,
+    ) => {
+      try {
+        if (fastify.token.user.name === request.params.name) {
+          reply.status(400);
+
+          return {
+            message: `You can't follow yourself`,
+          };
         }
-      }
 
-      await getManager().transaction(async (transactionalManager) => {
-        transactionalManager.createQueryBuilder()
-          .relation(User, 'follows')
-          .of(follower)
-          .add(followee);
+        const [follower, followee] = await Promise.all([
+          fastify.repositories.users.findOneOrFail({
+            where: {
+              name: fastify.token.user.name,
+            },
+          }),
+          fastify.repositories.users.findOneOrFail({
+            where: {
+              name: request.params.name,
+            },
+          }),
+        ]);
 
-        followee.followerCount += 1;
+        if (await isFollowing(follower.id, followee.id)) {
+          reply.status(400);
 
-        await transactionalManager.save(follower);
-        await transactionalManager.save(followee);
-      });
-
-      return [follower, followee];
-    } catch (error) {
-      return reply.status(500).send({
-        message: 'An error ocurred users',
-        error
-      });
-    }
-  });
-
-  fastify.post('/unfollow/:name', async (request: FastifyRequest<{ Params: { name: string; } }>, reply: FastifyReply) => {
-    try {
-      if (fastify.token.user.name === request.params.name) {
-        reply.status(400);
-
-        return {
-          message: `You can't unfollow yourself`
-        };
-      }
-
-      const [follower, followee] = await Promise.all([
-        fastify.repositories.users.findOneOrFail({
-          where: {
-            name: fastify.token.user.name
-          }
-        }),
-        fastify.repositories.users.findOneOrFail({
-          where: {
-            name: request.params.name,
-          }
-        }),
-      ]);
-
-      if (!(await isFollowing(follower.id, followee.id))) {
-        reply.status(400);
-
-        return {
-          message: `${follower.name} is not following ${followee.name}`
+          return {
+            message: `${follower.name} already follows ${followee.name}`,
+          };
         }
+
+        await getManager().transaction(async (transactionalManager) => {
+          transactionalManager
+            .createQueryBuilder()
+            .relation(User, 'follows')
+            .of(follower)
+            .add(followee);
+
+          followee.followerCount += 1;
+
+          await transactionalManager.save(follower);
+          await transactionalManager.save(followee);
+        });
+
+        return [follower, followee];
+      } catch (error) {
+        return reply.status(500).send({
+          message: 'An error ocurred users',
+          error,
+        });
       }
+    },
+  );
 
-      await getManager().transaction(async (transactionalManager) => {
-        transactionalManager.createQueryBuilder()
-          .relation(User, 'follows')
-          .of(follower)
-          .remove(followee);
+  fastify.post(
+    '/unfollow/:name',
+    async (
+      request: FastifyRequest<{ Params: { name: string } }>,
+      reply: FastifyReply,
+    ) => {
+      try {
+        if (fastify.token.user.name === request.params.name) {
+          reply.status(400);
 
-        followee.followerCount -= 1;
+          return {
+            message: `You can't unfollow yourself`,
+          };
+        }
 
-        await transactionalManager.save(follower);
-        await transactionalManager.save(followee);
-      });
-  
-      return [follower, followee];
-    } catch (error) {
-      return reply.status(500).send({
-        message: 'An error ocurred users',
-        error
-      });
-    }
-  });
+        const [follower, followee] = await Promise.all([
+          fastify.repositories.users.findOneOrFail({
+            where: {
+              name: fastify.token.user.name,
+            },
+          }),
+          fastify.repositories.users.findOneOrFail({
+            where: {
+              name: request.params.name,
+            },
+          }),
+        ]);
+
+        if (!(await isFollowing(follower.id, followee.id))) {
+          reply.status(400);
+
+          return {
+            message: `${follower.name} is not following ${followee.name}`,
+          };
+        }
+
+        await getManager().transaction(async (transactionalManager) => {
+          transactionalManager
+            .createQueryBuilder()
+            .relation(User, 'follows')
+            .of(follower)
+            .remove(followee);
+
+          followee.followerCount -= 1;
+
+          await transactionalManager.save(follower);
+          await transactionalManager.save(followee);
+        });
+
+        return [follower, followee];
+      } catch (error) {
+        return reply.status(500).send({
+          message: 'An error ocurred users',
+          error,
+        });
+      }
+    },
+  );
 
   done();
 }
 
-export default function (fastify: FastifyInstance, _: FastifyRegisterOptions<unknown>, done: DoneFuncWithErrOrRes): void {
+export default function (
+  fastify: FastifyInstance,
+  _: FastifyRegisterOptions<unknown>,
+  done: DoneFuncWithErrOrRes,
+): void {
   fastify.register(routes);
 
   done();

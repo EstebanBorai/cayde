@@ -1,4 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn, OneToMany, ManyToMany, JoinTable } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  ManyToMany,
+  JoinTable,
+} from 'typeorm';
 
 import { BaseModel } from '../core';
 import { model as Post } from '../post';
@@ -20,13 +27,13 @@ export default class User extends BaseModel {
   @Column({ length: 100, name: 'surname', nullable: false })
   surname: string;
 
-  @ManyToMany(() => User, user => user.follows)
+  @ManyToMany(() => User, (user) => user.follows)
   @JoinTable()
   follows: User[];
 
   @Column({ name: 'follower_count', default: 0 })
   followerCount: number;
 
-  @OneToMany(() => Post, post => post.author)
+  @OneToMany(() => Post, (post) => post.author)
   posts: Post[];
 }

@@ -35,7 +35,7 @@ test('auth: sign up an user', async (t: Test) => {
   t.strictEqual(responseBody.email, 'j.appleseed@example.com');
   t.strictEqual(responseBody.followerCount, 0);
   t.strictEqual(response.statusCode, 201);
-  
+
   t.end();
 });
 
@@ -45,10 +45,10 @@ test('auth: login an user and gets JWT', async (t: Test) => {
     url: 'auth/login',
     headers: {
       authorization: `Basic am9obmFwcGxlc2VlZDphYmMxMjM=`,
-    }
+    },
   });
 
-  const responseBody: { token: string; } = JSON.parse(response.body);
+  const responseBody: { token: string } = JSON.parse(response.body);
 
   t.not(responseBody.token, undefined);
   t.strictEquals(typeof responseBody.token, 'string');

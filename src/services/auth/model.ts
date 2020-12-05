@@ -1,4 +1,10 @@
-import { Entity, Column, OneToOne, JoinColumn, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Entity,
+  Column,
+  OneToOne,
+  JoinColumn,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 import { BaseModel } from '../core';
 import { model as User } from '../user';

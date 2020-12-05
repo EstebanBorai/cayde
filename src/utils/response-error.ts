@@ -3,7 +3,10 @@ interface ErrorResponse {
   message: string;
 }
 
-export const makeErrorResponse = (status: number, message: string): ErrorResponse => ({
+export const makeErrorResponse = (
+  status: number,
+  message: string,
+): ErrorResponse => ({
   status,
-  message  
+  message,
 });

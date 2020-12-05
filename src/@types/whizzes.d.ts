@@ -7,7 +7,7 @@ declare namespace Whizzes {
   interface TokenPayload {
     user: {
       name: string;
-    }
+    };
   }
 
   namespace Users {

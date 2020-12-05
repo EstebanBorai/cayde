@@ -11,7 +11,7 @@ test('checks for valid usernames', (t: Test): void => {
     'DeeCeeComics',
     'testTesttest',
     'AaAeEeOoO',
-    'NewYorkState'
+    'NewYorkState',
   ];
 
   usernames.forEach((username) => {
@@ -56,7 +56,7 @@ test('checks for invalid emails', (t: Test): void => {
   const emails = [
     'this is not valid@email.com',
     'aaaa.eee@eeeeeaaaaa',
-    'w@.com'
+    'w@.com',
   ];
 
   emails.forEach((email) => {
