@@ -5,6 +5,8 @@
 node_modules
 /dist
 
+# production
+dist
 
 # local env files
 .env

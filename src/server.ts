@@ -10,12 +10,12 @@ import typeormPlugin from './plugins/typeorm';
 import type { FastifyInstance } from 'fastify';
 
 export function makeServer(): FastifyInstance {
-  if (process.env.ENVIRONMENT === 'development') {
+  if (process.env.NODE_ENV === 'development') {
     readEnvFile();
   }
 
   const {
-    ENVIRONMENT,
+    NODE_ENV,
     JWT_SECRET,
     POSTGRES_DB,
     POSTGRES_PASSWORD,
@@ -50,7 +50,7 @@ export function makeServer(): FastifyInstance {
   });
 
   server.register(fastifyJwt, {
-    secret: ENVIRONMENT === 'testing' ? 'secret' : JWT_SECRET,
+    secret: NODE_ENV === 'testing' ? 'secret' : JWT_SECRET,
   });
 
   server.register(router);

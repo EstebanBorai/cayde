@@ -35,8 +35,8 @@ interface TypeORMPluginOptions {
 const makeConnectionOptions = (
   connectionOptions: ConnectionOptions,
 ): ConnectionOptions => {
-  if (process.env.ENVIRONMENT === 'testing') {
-    // if the current ENVIRONMENT is "testing" then we
+  if (process.env.NODE_ENV === 'testing') {
+    // if the current NODE_ENV is "testing" then we
     // use a SQLite In Memory Database
     console.warn('===========================================');
     console.warn('===| Using "SQLite In Memory Database" |===');

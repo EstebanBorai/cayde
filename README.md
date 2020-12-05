@@ -4,6 +4,14 @@
   <h4 align="center">Back-End development for whizzes a social network application inspired on Reddit and Twitter</h4>
 </div>
 
+<div align="center">
+
+  ![Build](https://github.com/EstebanBorai/whizzes-server/workflows/build/badge.svg)
+  ![Lint](https://github.com/EstebanBorai/whizzes-server/workflows/lint/badge.svg)
+  ![Tests](https://github.com/EstebanBorai/whizzes-server/workflows/test/badge.svg)
+
+</div>
+
 ## Index
 
 - [Motivation](#motivation)

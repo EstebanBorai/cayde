@@ -1,0 +1,23 @@
+name: build
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '14.x'
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Runs "yarn build"
+        run: yarn build
