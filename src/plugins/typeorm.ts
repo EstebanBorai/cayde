@@ -59,7 +59,7 @@ const makeConnectionOptions = (
 async function typeorm(
   fastify: FastifyInstance,
   options: TypeORMPluginOptions,
-  done,
+  next: (err?: Error) => void,
 ) {
   try {
     const hasEntities = options.entities && Object.values(options.entities);
@@ -71,7 +71,7 @@ async function typeorm(
     });
 
     const dbConnection = await createConnection(connectionOptions);
-    const mappedRepositores: Record<string, Repository<unknown>> = {};
+    const mappedRepositores: Record<string, Repository<any>> = {};
 
     if (hasEntities) {
       // if entities are provided, then map every entity from the `options.entities` object
@@ -79,7 +79,7 @@ async function typeorm(
       // fastify's instance with the repositories
       Object.keys(options.entities).forEach((entityName) => {
         mappedRepositores[entityName] = dbConnection.getRepository(
-          options.entities[entityName] as EntitySchema<unknown>,
+          options.entities[entityName] as EntitySchema<any>,
         );
       });
     }
@@ -98,7 +98,7 @@ async function typeorm(
     fastify.log.error('Unable to connect to the database');
     fastify.log.error(error);
   } finally {
-    done();
+    next();
   }
 }
 

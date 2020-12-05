@@ -6,14 +6,18 @@ import type {
   FastifyRequest,
   RawRequestDefaultExpression,
   RawReplyDefaultExpression,
-  FastifyPluginOptions
+  FastifyPluginOptions,
 } from 'fastify';
 import type { Server } from 'http';
 
 function routes(
-  fastify: FastifyInstance<Server, RawRequestDefaultExpression<Server>, RawReplyDefaultExpression<Server>>,
+  fastify: FastifyInstance<
+    Server,
+    RawRequestDefaultExpression<Server>,
+    RawReplyDefaultExpression<Server>
+  >,
   _: FastifyPluginOptions,
-  next: (err?: Error) => void
+  next: (err?: Error) => void,
 ) {
   fastify.post(
     '/',
@@ -27,7 +31,7 @@ function routes(
           where: {
             // we use the user from the token in order
             // to authenticate the post owner
-            name: fastify.token.user.name,
+            name: fastify?.token?.user.name,
           },
         });
 
@@ -58,9 +62,13 @@ function routes(
 }
 
 export default function (
-  fastify: FastifyInstance<Server, RawRequestDefaultExpression<Server>, RawReplyDefaultExpression<Server>>,
+  fastify: FastifyInstance<
+    Server,
+    RawRequestDefaultExpression<Server>,
+    RawReplyDefaultExpression<Server>
+  >,
   _: FastifyPluginOptions,
-  next: (err?: Error) => void
+  next: (err?: Error) => void,
 ): void {
   fastify.register(routes);
 

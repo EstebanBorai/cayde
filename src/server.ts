@@ -38,9 +38,9 @@ export function makeServer(): FastifyInstance {
       logging: true,
     },
     entities: {
-      posts: services.postService.model,
-      users: services.userService.model,
-      secrets: services.authService.model,
+      posts: services.postService.entity,
+      users: services.userService.entity,
+      secrets: services.authService.entity,
     },
   });
 

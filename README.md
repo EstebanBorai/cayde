@@ -6,9 +6,9 @@
 
 <div align="center">
 
-  ![Build](https://github.com/EstebanBorai/whizzes-server/workflows/build/badge.svg)
-  ![Lint](https://github.com/EstebanBorai/whizzes-server/workflows/lint/badge.svg)
-  ![Tests](https://github.com/EstebanBorai/whizzes-server/workflows/test/badge.svg)
+![Build](https://github.com/EstebanBorai/whizzes-server/workflows/build/badge.svg)
+![Lint](https://github.com/EstebanBorai/whizzes-server/workflows/lint/badge.svg)
+![Tests](https://github.com/EstebanBorai/whizzes-server/workflows/test/badge.svg)
 
 </div>
 
@@ -23,6 +23,12 @@
   - [Environment Variables](#environment-variables)
 - [Contributing](#contributing)
 - [License](#license)
+
+## Diagram
+
+<div align="center">
+  <img src="./docs/diagram.png" width="600" />
+</div>
 
 ## Motivation
 
@@ -135,7 +141,7 @@ system you can run the following command:
 #### For Unix based systems (MacOS, Linux):
 
 ```bash
-scripts/docker-start
+bin/docker-start
 ```
 
 #### For Windows:

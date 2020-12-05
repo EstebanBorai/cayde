@@ -1,2 +1,2 @@
 export { default as route } from './route';
-export { default as model } from './model';
+export { default as entity } from './entity';

@@ -6,14 +6,18 @@ import type {
   FastifyRequest,
   RawRequestDefaultExpression,
   RawReplyDefaultExpression,
-  FastifyPluginOptions
+  FastifyPluginOptions,
 } from 'fastify';
 import type { Server } from 'http';
 
 export default function (
-  fastify: FastifyInstance<Server, RawRequestDefaultExpression<Server>, RawReplyDefaultExpression<Server>>,
+  fastify: FastifyInstance<
+    Server,
+    RawRequestDefaultExpression<Server>,
+    RawReplyDefaultExpression<Server>
+  >,
   _: FastifyPluginOptions,
-  next: (err?: Error) => void
+  next: (err?: Error) => void,
 ): void {
   fastify.addHook(
     'preValidation',
