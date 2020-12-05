@@ -1,17 +1,19 @@
 import services from '../../services';
 
 import type {
-  DoneFuncWithErrOrRes,
   FastifyInstance,
-  FastifyRegisterOptions,
   FastifyReply,
   FastifyRequest,
+  RawRequestDefaultExpression,
+  RawReplyDefaultExpression,
+  FastifyPluginOptions
 } from 'fastify';
+import type { Server } from 'http';
 
 export default function (
-  fastify: FastifyInstance,
-  _: FastifyRegisterOptions<unknown>,
-  done: DoneFuncWithErrOrRes,
+  fastify: FastifyInstance<Server, RawRequestDefaultExpression<Server>, RawReplyDefaultExpression<Server>>,
+  _: FastifyPluginOptions,
+  next: (err?: Error) => void
 ): void {
   fastify.addHook(
     'preValidation',
@@ -34,5 +36,5 @@ export default function (
     prefix: '/v1/posts',
   });
 
-  done();
+  next();
 }

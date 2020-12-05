@@ -3,14 +3,16 @@ import { route as auth } from '../services/auth';
 
 import type {
   FastifyInstance,
-  FastifyRegisterOptions,
-  DoneFuncWithErrOrRes,
+  RawRequestDefaultExpression,
+  RawReplyDefaultExpression,
+  FastifyPluginOptions
 } from 'fastify';
+import type { Server } from 'http';
 
 export default function (
-  fastify: FastifyInstance,
-  _: FastifyRegisterOptions<unknown>,
-  done: DoneFuncWithErrOrRes,
+  fastify: FastifyInstance<Server, RawRequestDefaultExpression<Server>, RawReplyDefaultExpression<Server>>,
+  _: FastifyPluginOptions,
+  next: (err?: Error) => void
 ): void {
   fastify.register(api, {
     prefix: '/api',
@@ -20,5 +22,5 @@ export default function (
     prefix: '/auth',
   });
 
-  done();
+  next();
 }

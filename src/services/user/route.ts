@@ -7,14 +7,16 @@ import type {
   FastifyInstance,
   FastifyReply,
   FastifyRequest,
-  DoneFuncWithErrOrRes,
-  FastifyRegisterOptions,
+  RawRequestDefaultExpression,
+  RawReplyDefaultExpression,
+  FastifyPluginOptions
 } from 'fastify';
+import type { Server } from 'http';
 
 function routes(
-  fastify: FastifyInstance,
-  _: FastifyRegisterOptions<unknown>,
-  done: DoneFuncWithErrOrRes,
+  fastify: FastifyInstance<Server, RawRequestDefaultExpression<Server>, RawReplyDefaultExpression<Server>>,
+  _: FastifyPluginOptions,
+  next: (err?: Error) => void
 ) {
   fastify.get(
     '/:name',
@@ -75,7 +77,7 @@ function routes(
       reply: FastifyReply,
     ) => {
       try {
-        if (fastify.token.user.name === request.params.name) {
+        if (fastify?.token?.user.name === request.params.name) {
           reply.status(400);
 
           return {
@@ -86,7 +88,7 @@ function routes(
         const [follower, followee] = await Promise.all([
           fastify.repositories.users.findOneOrFail({
             where: {
-              name: fastify.token.user.name,
+              name: fastify?.token?.user.name,
             },
           }),
           fastify.repositories.users.findOneOrFail({
@@ -134,7 +136,7 @@ function routes(
       reply: FastifyReply,
     ) => {
       try {
-        if (fastify.token.user.name === request.params.name) {
+        if (fastify?.token?.user.name === request.params.name) {
           reply.status(400);
 
           return {
@@ -145,7 +147,7 @@ function routes(
         const [follower, followee] = await Promise.all([
           fastify.repositories.users.findOneOrFail({
             where: {
-              name: fastify.token.user.name,
+              name: fastify?.token?.user.name,
             },
           }),
           fastify.repositories.users.findOneOrFail({
@@ -186,15 +188,15 @@ function routes(
     },
   );
 
-  done();
+  next();
 }
 
 export default function (
-  fastify: FastifyInstance,
-  _: FastifyRegisterOptions<unknown>,
-  done: DoneFuncWithErrOrRes,
+  fastify: FastifyInstance<Server, RawRequestDefaultExpression<Server>, RawReplyDefaultExpression<Server>>,
+  _: FastifyPluginOptions,
+  next: (err?: Error) => void
 ): void {
   fastify.register(routes);
 
-  done();
+  next();
 }

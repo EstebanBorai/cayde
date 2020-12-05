@@ -2,16 +2,18 @@ import { getManager } from 'typeorm';
 
 import type {
   FastifyInstance,
-  FastifyRegisterOptions,
   FastifyReply,
-  DoneFuncWithErrOrRes,
   FastifyRequest,
+  RawRequestDefaultExpression,
+  RawReplyDefaultExpression,
+  FastifyPluginOptions
 } from 'fastify';
+import type { Server } from 'http';
 
 function routes(
-  fastify: FastifyInstance,
-  _: FastifyRegisterOptions<unknown>,
-  done: DoneFuncWithErrOrRes,
+  fastify: FastifyInstance<Server, RawRequestDefaultExpression<Server>, RawReplyDefaultExpression<Server>>,
+  _: FastifyPluginOptions,
+  next: (err?: Error) => void
 ) {
   fastify.post(
     '/',
@@ -52,15 +54,15 @@ function routes(
     },
   );
 
-  done();
+  next();
 }
 
 export default function (
-  fastify: FastifyInstance,
-  _: FastifyRegisterOptions<unknown>,
-  done: DoneFuncWithErrOrRes,
+  fastify: FastifyInstance<Server, RawRequestDefaultExpression<Server>, RawReplyDefaultExpression<Server>>,
+  _: FastifyPluginOptions,
+  next: (err?: Error) => void
 ): void {
   fastify.register(routes);
 
-  done();
+  next();
 }
