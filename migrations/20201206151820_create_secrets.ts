@@ -4,7 +4,7 @@ import withUpdateTriggers from './utils/with-update-triggers';
 
 export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable('secrets', (table: Knex.TableBuilder) => {
-    table.uuid('id').primary();
+    table.uuid('id').defaultTo(knex.raw('uuid_generate_v4()'));
     table.string('hash').notNullable();
     table.string('user_id').notNullable();
     table.timestamps(false, true);

@@ -9,7 +9,7 @@ import type Knex from 'knex';
  * `User` (the followee) by querying the `user_follows`
  * join table
  */
-export default async function isFollowing(
+export default async function (
   knex: Knex,
   followerId: string,
   followeeId: string,
@@ -25,8 +25,7 @@ export default async function isFollowing(
   LIMIT 1`;
 
   const result = await knex.raw(sqlQuery);
+  const count = parseInt(result.rows[0].count, 10);
 
-  result.rows[0].count;
-
-  return Boolean(result.rows[0].count);
+  return Boolean(count);
 }

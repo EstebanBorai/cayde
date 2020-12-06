@@ -108,23 +108,21 @@ function routes(
 
         fastify.knex.transaction(
           async (trx: Transaction): Promise<void> => {
-            const user = await trx
-              .insert<Whizzes.Users.User>({
+            const user = await trx('users')
+              .insert<Whizzes.Users.User[]>({
                 firstName: payload.firstName,
                 surname: payload.surname,
                 name: payload.name.toLowerCase(),
                 email: payload.email.toLowerCase(),
               })
-              .returning('*')
-              .first();
+              .returning('*');
 
-            await trx
+            await trx('secrets')
               .insert<Whizzes.Auth.Secret>({
                 hash,
-                userId: user.id,
+                userId: user[0].id,
               })
-              .returning('*')
-              .first();
+              .returning('*');
 
             trx.commit();
 

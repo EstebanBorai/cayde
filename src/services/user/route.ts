@@ -1,4 +1,5 @@
 import isFollowing from './utils/is-following';
+import findFollowerAndFollowee from './utils/find-follower-followee';
 
 import type {
   FastifyInstance,
@@ -93,23 +94,11 @@ function routes(
           };
         }
 
-        const [follower, followee]: [
-          Whizzes.Users.User,
-          Whizzes.Users.User,
-        ] = await Promise.all([
-          fastify
-            .knex('users')
-            .where({
-              name: fastify?.token?.user.name,
-            })
-            .first(),
-          fastify
-            .knex('users')
-            .where({
-              name: request.params.name,
-            })
-            .first(),
-        ]);
+        const { follower, followee } = await findFollowerAndFollowee(
+          fastify.knex,
+          fastify?.token?.user.name as string,
+          request.params.name,
+        );
 
         if (await isFollowing(fastify.knex, follower.id, followee.id)) {
           reply.status(400);
@@ -119,33 +108,30 @@ function routes(
           };
         }
 
-        fastify.knex.transaction(
+        await fastify.knex.transaction(
           async (trx: Transaction): Promise<void> => {
-            await trx('user_follows')
-              .insert({
-                follower: follower.id,
-                followee: followee.id,
-              })
-              .returning('*')
-              .first();
+            await trx('user_follows').insert({
+              follower: follower.id,
+              followee: followee.id,
+            });
 
             await trx('users')
               .update<Whizzes.Users.User>({
-                follows: followee.followerCount + 1,
+                followerCount: followee.followerCount + 1,
               })
               .where({
                 id: followee.id,
-              })
-              .returning('*');
-
-            trx.commit();
+              });
           },
         );
+        
+        const result = await findFollowerAndFollowee(
+          fastify.knex,
+          fastify?.token?.user.name as string,
+          request.params.name,
+        );
 
-        return reply.status(201).send({
-          follower,
-          followee,
-        });
+        return reply.status(200).send(result);
       } catch (error) {
         return reply.status(500).send({
           message: 'An error ocurred users',
@@ -170,23 +156,11 @@ function routes(
           };
         }
 
-        const [follower, followee]: [
-          Whizzes.Users.User,
-          Whizzes.Users.User,
-        ] = await Promise.all([
-          fastify
-            .knex('users')
-            .where({
-              name: fastify?.token?.user.name,
-            })
-            .first(),
-          fastify
-            .knex('users')
-            .where({
-              name: request.params.name,
-            })
-            .first(),
-        ]);
+        const { follower, followee } = await findFollowerAndFollowee(
+          fastify.knex,
+          fastify?.token?.user.name as string,
+          request.params.name,
+        );
 
         if (!(await isFollowing(fastify.knex, follower.id, followee.id))) {
           reply.status(400);
@@ -196,7 +170,7 @@ function routes(
           };
         }
 
-        fastify.knex.transaction(
+        await fastify.knex.transaction(
           async (trx: Transaction): Promise<void> => {
             await trx('user_follows').del().where({
               follower: follower.id,
@@ -205,18 +179,22 @@ function routes(
 
             await trx('users')
               .update<Whizzes.Users.User>({
-                follows: followee.followerCount - 1,
+                followerCount: followee.followerCount - 1,
               })
               .where({
                 id: followee.id,
               })
               .returning('*');
-
-            trx.commit();
           },
         );
 
-        return [follower, followee];
+        const result = await findFollowerAndFollowee(
+          fastify.knex,
+          fastify?.token?.user.name as string,
+          request.params.name,
+        );
+
+        return reply.status(200).send(result);
       } catch (error) {
         return reply.status(500).send({
           message: 'An error ocurred users',
