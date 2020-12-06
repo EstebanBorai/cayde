@@ -2,8 +2,46 @@ import { EntitySchema } from 'typeorm';
 
 import { BaseEntity } from '../core';
 
+export class User implements Whizzes.Users.User {
+  id: string;
+  email: string;
+  name: string;
+  firstName: string;
+  surname: string;
+  follows: Whizzes.Users.User[];
+  followerCount: number;
+  posts: Whizzes.Posts.Post[];
+  createdAt: Date;
+  updatedAt: Date;
+
+  constructor(
+    id: string,
+    email: string,
+    name: string,
+    firstName: string,
+    surname: string,
+    follows: Whizzes.Users.User[],
+    followerCount: number,
+    posts: Whizzes.Posts.Post[],
+    createdAt: Date,
+    updatedAt: Date,
+  ) {
+    this.id = id;
+    this.email = email;
+    this.name = name;
+    this.firstName = firstName;
+    this.surname = surname;
+    this.follows = follows;
+    this.followerCount = followerCount;
+    this.posts = posts;
+    this.createdAt = createdAt;
+    this.updatedAt = updatedAt;
+  }
+}
+
 export default new EntitySchema<Whizzes.Users.User>({
   name: 'user',
+  target: User,
   columns: {
     ...BaseEntity,
     email: {

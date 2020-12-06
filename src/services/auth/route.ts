@@ -1,5 +1,8 @@
-import { crypto, validate, basicAuth } from './utils';
 import { getManager } from 'typeorm';
+
+import { crypto, validate, basicAuth } from './utils';
+import { User } from '../user/entity';
+import { Secret } from './entity';
 
 import type {
   FastifyInstance,
@@ -116,14 +119,14 @@ function routes(
             email: payload.email.toLowerCase(),
           });
 
-          await transactionalManager.save(newUser);
+          await transactionalManager.save(User, newUser);
 
           const newSecret = fastify.repositories.secrets.create({
             hash,
             user: newUser,
           });
 
-          await transactionalManager.save(newSecret);
+          await transactionalManager.save(Secret, newSecret);
 
           return reply.status(201).send(newUser);
         });
