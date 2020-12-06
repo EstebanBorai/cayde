@@ -124,7 +124,7 @@ function routes(
               });
           },
         );
-        
+
         const result = await findFollowerAndFollowee(
           fastify.knex,
           fastify?.token?.user.name as string,

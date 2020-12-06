@@ -4,7 +4,7 @@ import withUpdateTriggers from './utils/with-update-triggers';
 
 export async function up(knex: Knex): Promise<void> {
   await knex.schema.createTable('users', (table: Knex.TableBuilder) => {
-    table.uuid('id').defaultTo(knex.raw('uuid_generate_v4()')),
+    table.uuid('id').defaultTo(knex.raw('uuid_generate_v4()'));
     table.string('email').notNullable().unique();
     table.string('name').notNullable().unique();
     table.string('first_name').notNullable().unique();
