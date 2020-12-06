@@ -1,13 +1,9 @@
-import type { Repository } from 'typeorm';
+import type Knex from 'knex';
 
 declare module 'fastify' {
   interface FastifyInstance {
     token?: Whizzes.TokenPayload;
-    repositories: {
-      posts: Repository<Whizzes.Posts.Post>;
-      users: Repository<Whizzes.Users.User>;
-      secrets: Repository<Whizzes.Auth.Secret>;
-    };
+    knex: Knex;
     whipeDatabase: () => void;
   }
 }

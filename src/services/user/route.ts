@@ -1,6 +1,3 @@
-import { getManager } from 'typeorm';
-
-import User from './entity';
 import isFollowing from './utils/is-following';
 
 import type {
@@ -12,6 +9,7 @@ import type {
   FastifyPluginOptions,
 } from 'fastify';
 import type { Server } from 'http';
+import type { Transaction } from 'knex';
 
 function routes(
   fastify: FastifyInstance<
@@ -34,12 +32,12 @@ function routes(
     ) => {
       try {
         const name = request.params.name;
-        const user = await fastify.repositories.users.findOneOrFail({
-          relations: ['follows'],
-          where: {
+        const user = await fastify
+          .knex('users')
+          .where({
             name,
-          },
-        });
+          })
+          .first();
 
         return user;
       } catch (error) {
@@ -59,12 +57,18 @@ function routes(
     ) => {
       try {
         const name = request.params.name;
-        const user = await fastify.repositories.users.findOneOrFail({
-          relations: ['posts'],
-          where: { name },
+        const user: Whizzes.Users.User = await fastify
+          .knex('users')
+          .where({
+            name,
+          })
+          .first();
+
+        const posts: Whizzes.Posts.Post[] = await fastify.knex('posts').where({
+          user_id: user.id,
         });
 
-        return user.posts;
+        return posts;
       } catch (error) {
         return reply.status(500).send({
           message: 'An error ocurred users',
@@ -89,20 +93,25 @@ function routes(
           };
         }
 
-        const [follower, followee] = await Promise.all([
-          fastify.repositories.users.findOneOrFail({
-            where: {
+        const [follower, followee]: [
+          Whizzes.Users.User,
+          Whizzes.Users.User,
+        ] = await Promise.all([
+          fastify
+            .knex('users')
+            .where({
               name: fastify?.token?.user.name,
-            },
-          }),
-          fastify.repositories.users.findOneOrFail({
-            where: {
+            })
+            .first(),
+          fastify
+            .knex('users')
+            .where({
               name: request.params.name,
-            },
-          }),
+            })
+            .first(),
         ]);
 
-        if (await isFollowing(follower.id, followee.id)) {
+        if (await isFollowing(fastify.knex, follower.id, followee.id)) {
           reply.status(400);
 
           return {
@@ -110,20 +119,33 @@ function routes(
           };
         }
 
-        await getManager().transaction(async (transactionalManager) => {
-          transactionalManager
-            .createQueryBuilder()
-            .relation(User, 'follows')
-            .of(follower)
-            .add(followee);
+        fastify.knex.transaction(
+          async (trx: Transaction): Promise<void> => {
+            await trx('user_follows')
+              .insert({
+                follower: follower.id,
+                followee: followee.id,
+              })
+              .returning('*')
+              .first();
 
-          followee.followerCount += 1;
+            await trx('users')
+              .update<Whizzes.Users.User>({
+                follows: followee.followerCount + 1,
+              })
+              .where({
+                id: followee.id,
+              })
+              .returning('*');
 
-          await transactionalManager.save(follower);
-          await transactionalManager.save(followee);
+            trx.commit();
+          },
+        );
+
+        return reply.status(201).send({
+          follower,
+          followee,
         });
-
-        return [follower, followee];
       } catch (error) {
         return reply.status(500).send({
           message: 'An error ocurred users',
@@ -148,20 +170,25 @@ function routes(
           };
         }
 
-        const [follower, followee] = await Promise.all([
-          fastify.repositories.users.findOneOrFail({
-            where: {
+        const [follower, followee]: [
+          Whizzes.Users.User,
+          Whizzes.Users.User,
+        ] = await Promise.all([
+          fastify
+            .knex('users')
+            .where({
               name: fastify?.token?.user.name,
-            },
-          }),
-          fastify.repositories.users.findOneOrFail({
-            where: {
+            })
+            .first(),
+          fastify
+            .knex('users')
+            .where({
               name: request.params.name,
-            },
-          }),
+            })
+            .first(),
         ]);
 
-        if (!(await isFollowing(follower.id, followee.id))) {
+        if (!(await isFollowing(fastify.knex, follower.id, followee.id))) {
           reply.status(400);
 
           return {
@@ -169,18 +196,25 @@ function routes(
           };
         }
 
-        await getManager().transaction(async (transactionalManager) => {
-          transactionalManager
-            .createQueryBuilder()
-            .relation(User, 'follows')
-            .of(follower)
-            .remove(followee);
+        fastify.knex.transaction(
+          async (trx: Transaction): Promise<void> => {
+            await trx('user_follows').del().where({
+              follower: follower.id,
+              followee: followee.id,
+            });
 
-          followee.followerCount -= 1;
+            await trx('users')
+              .update<Whizzes.Users.User>({
+                follows: followee.followerCount - 1,
+              })
+              .where({
+                id: followee.id,
+              })
+              .returning('*');
 
-          await transactionalManager.save(follower);
-          await transactionalManager.save(followee);
-        });
+            trx.commit();
+          },
+        );
 
         return [follower, followee];
       } catch (error) {

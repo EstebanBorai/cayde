@@ -1,8 +1,4 @@
-import { getManager } from 'typeorm';
-
 import { crypto, validate, basicAuth } from './utils';
-import { User } from '../user/entity';
-import { Secret } from './entity';
 
 import type {
   FastifyInstance,
@@ -13,6 +9,7 @@ import type {
   FastifyPluginOptions,
 } from 'fastify';
 import type { Server } from 'http';
+import { Transaction } from 'knex';
 
 function routes(
   fastify: FastifyInstance<
@@ -38,21 +35,19 @@ function routes(
 
       const credentials = basicAuth(authorizationHeader);
 
-      const user = await fastify.repositories.users.findOneOrFail({
-        where: {
+      const user = await fastify
+        .knex('users')
+        .where({
           name: credentials.userId,
-        },
-      });
+        })
+        .first();
 
-      const {
-        hash: passwordHash,
-      } = await fastify.repositories.secrets.findOneOrFail({
-        where: {
-          user: {
-            id: user.id,
-          },
-        },
-      });
+      const { hash: passwordHash }: Whizzes.Auth.Secret = await fastify
+        .knex('secrets')
+        .where({
+          user_id: user.id,
+        })
+        .first();
 
       const isOk = await crypto.verify(credentials.password, passwordHash);
 
@@ -111,25 +106,31 @@ function routes(
 
         const hash = await crypto.makeHash(payload.password);
 
-        await getManager().transaction(async (transactionalManager) => {
-          const newUser = fastify.repositories.users.create({
-            firstName: payload.firstName,
-            surname: payload.surname,
-            name: payload.name.toLowerCase(),
-            email: payload.email.toLowerCase(),
-          });
+        fastify.knex.transaction(
+          async (trx: Transaction): Promise<void> => {
+            const user = await trx
+              .insert<Whizzes.Users.User>({
+                firstName: payload.firstName,
+                surname: payload.surname,
+                name: payload.name.toLowerCase(),
+                email: payload.email.toLowerCase(),
+              })
+              .returning('*')
+              .first();
 
-          await transactionalManager.save(User, newUser);
+            await trx
+              .insert<Whizzes.Auth.Secret>({
+                hash,
+                userId: user.id,
+              })
+              .returning('*')
+              .first();
 
-          const newSecret = fastify.repositories.secrets.create({
-            hash,
-            user: newUser,
-          });
+            trx.commit();
 
-          await transactionalManager.save(Secret, newSecret);
-
-          return reply.status(201).send(newUser);
-        });
+            return reply.status(201).send(user);
+          },
+        );
       } catch (error) {
         reply.status(500);
 

@@ -1,4 +1,4 @@
-import { getManager } from 'typeorm';
+import type Knex from 'knex';
 
 /**
  *
@@ -6,10 +6,11 @@ import { getManager } from 'typeorm';
  * @param followeeId
  *
  * Checks if a `User` (the follower) follows another
- * `User` (the followee) by querying the `user_follows_user`
+ * `User` (the followee) by querying the `user_follows`
  * join table
  */
 export default async function isFollowing(
+  knex: Knex,
   followerId: string,
   followeeId: string,
 ): Promise<boolean> {
@@ -17,14 +18,15 @@ export default async function isFollowing(
   SELECT
     COUNT(1)
   FROM
-    user_follows_user
+    user_follows
   WHERE
-    user_follows_user."userId_1" = '${followerId}'
-    AND user_follows_user."userId_2" = '${followeeId}'
+    user_follows."follower" = '${followerId}'
+    AND user_follows."followee" = '${followeeId}'
   LIMIT 1`;
 
-  const result: [{ count: string }] = await getManager().query(sqlQuery);
-  const count = parseInt(result[0].count, 10);
+  const result = await knex.raw(sqlQuery);
 
-  return Boolean(count);
+  result.rows[0].count;
+
+  return Boolean(result.rows[0].count);
 }

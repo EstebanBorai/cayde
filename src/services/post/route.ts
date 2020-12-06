@@ -1,5 +1,3 @@
-import { getManager } from 'typeorm';
-
 import type {
   FastifyInstance,
   FastifyReply,
@@ -9,6 +7,7 @@ import type {
   FastifyPluginOptions,
 } from 'fastify';
 import type { Server } from 'http';
+import type { Transaction } from 'knex';
 
 function routes(
   fastify: FastifyInstance<
@@ -26,29 +25,27 @@ function routes(
       reply: FastifyReply,
     ) => {
       try {
-        const user = await fastify.repositories.users.findOneOrFail({
-          relations: ['posts'],
-          where: {
-            // we use the user from the token in order
-            // to authenticate the post owner
+        const user: Whizzes.Users.User = await fastify
+          .knex('users')
+          .where({
             name: fastify?.token?.user.name,
+          })
+          .first();
+
+        fastify.knex.transaction(
+          async (trx: Transaction): Promise<void> => {
+            const post = await trx('posts')
+              .insert<Whizzes.Posts.Post>({
+                content: request.body.content,
+                user_id: user.id,
+              })
+              .returning('*');
+
+            trx.commit();
+
+            return reply.status(201).send(post);
           },
-        });
-
-        await getManager().transaction(async (transactionalManager) => {
-          const newPost = fastify.repositories.posts.create({
-            content: request.body.content,
-            author: user,
-          });
-
-          await transactionalManager.save(newPost);
-
-          user.posts.push(newPost);
-
-          await transactionalManager.save(user);
-
-          return reply.status(201).send(newPost);
-        });
+        );
       } catch (error) {
         return reply.status(500).send({
           message: 'An error ocurred creating the post',
