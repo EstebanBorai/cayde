@@ -73,6 +73,62 @@ function routes(
     },
   );
 
+  fastify.get(
+    '/me',
+    async (request: FastifyRequest, reply: FastifyReply) => {
+      try {
+
+        const authorizationHeader = request.headers.authorization;
+  
+        if (!authorizationHeader) {
+          reply.status(400);
+  
+          return reply.send({
+            message: 'missing "Authorization" header',
+          });
+        }
+  
+        const headerParts = authorizationHeader.split(' ');
+
+        if (headerParts.length !== 2 || headerParts[0].toLowerCase() !== 'bearer') {
+          reply.status(400);
+
+          return {
+            message: 'Invalid Authorization header'
+          }
+        }
+
+        const claims: Whizzes.TokenPayload = fastify.jwt.verify(headerParts[1]);
+        const tokenUserName = claims.user.name;
+        const user = await fastify
+          .knex('users')
+          .where({
+            name: tokenUserName,
+          })
+          .first();
+  
+        const token = fastify.jwt.sign({
+          user: {
+            name: user.name,
+          },
+        } as Whizzes.TokenPayload);
+  
+        reply.status(200);
+  
+        return {
+          token,
+          user,
+        }
+      } catch (e) {
+        reply.status(401);
+
+        return {
+          message: 'An error ocurred validating token'
+        }
+      }
+    },
+  );
+
   fastify.post(
     '/signup',
     async (request: FastifyRequest, reply: FastifyReply) => {
