@@ -30,16 +30,19 @@ function routes(
     ) => {
       try {
         const token = fastify?.token as Whizzes.TokenPayload;
-        const user = token.user;
+        const name = token.user.name;
 
         const query = `
           SELECT
             posts.id,
             posts.content,
-            posts.user_id,
-            posts.created_at
+            posts.user_id AS author_id,
+            posts.created_at,
+            users."name" AS author,
+            CONCAT(users.first_name, CONCAT(' ', users.surname)) AS author_full_name
           FROM
             posts
+          INNER JOIN users ON posts.user_id::text = users.id::text
           WHERE
             user_id IN(
               SELECT
@@ -50,28 +53,31 @@ function routes(
                     id::text FROM users
                   WHERE
                     users.name = ?))
-            AND 
           ORDER BY
             posts.created_at DESC;`;
 
-        const result = await fastify.knex.raw(query, [user.name]);
+        const result = await fastify.knex.raw(query, [name]);
 
         return result.rows.map(
           (row: {
             id: string;
             content: string;
-            user_id: string;
+            author_id: string;
             created_at: Date;
+            author: string;
+            author_full_name: string;
           }) => ({
             id: row.id,
             content: row.content,
-            userId: row.user_id,
+            userId: row.author_id,
             createdAt: row.created_at,
+            author: row.author,
+            authorFullName: row.author_full_name,
           }),
         );
       } catch (error) {
         return reply.status(500).send({
-          message: `An error ocurred fetching the user with name: ${request.params.name}`,
+          message: 'An error ocurred fetching the feed',
           error,
         });
       }
