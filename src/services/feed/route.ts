@@ -33,30 +33,36 @@ function routes(
         const name = token.user.name;
 
         const query = `
+      SELECT
+        posts.id,
+        posts.content,
+        posts.user_id AS author_id,
+        posts.created_at,
+        users. "name" AS author,
+        CONCAT(users.first_name, CONCAT(' ', users.surname)) AS author_full_name
+      FROM
+        posts
+        INNER JOIN users ON posts.user_id::text = users.id::text
+      WHERE
+        user_id IN(
           SELECT
-            posts.id,
-            posts.content,
-            posts.user_id AS author_id,
-            posts.created_at,
-            users."name" AS author,
-            CONCAT(users.first_name, CONCAT(' ', users.surname)) AS author_full_name
-          FROM
-            posts
-          INNER JOIN users ON posts.user_id::text = users.id::text
+            followee::text FROM user_follows
           WHERE
-            user_id IN(
+            user_follows.follower::text = (
               SELECT
-                followee::text FROM user_follows
+                id::text FROM users
               WHERE
-                user_follows.follower::text = (
-                  SELECT
-                    id::text FROM users
-                  WHERE
-                    users.name = ?))
-          ORDER BY
-            posts.created_at DESC;`;
+                users.name = ?))
+        OR user_id = (
+          SELECT
+            id::text FROM users
+          WHERE
+            users."name" = ?
+        )
+      ORDER BY
+        posts.created_at DESC;`;
 
-        const result = await fastify.knex.raw(query, [name]);
+        const result = await fastify.knex.raw(query, [name, name]);
 
         return result.rows.map(
           (row: {
