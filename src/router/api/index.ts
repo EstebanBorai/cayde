@@ -32,6 +32,10 @@ export default function (
     },
   );
 
+  fastify.register(services.feedService.route, {
+    prefix: '/v1/feed',
+  });
+
   fastify.register(services.userService.route, {
     prefix: '/v1/users',
   });
