@@ -133,7 +133,7 @@ function routes(
     async (request: FastifyRequest, reply: FastifyReply) => {
       try {
         const payload = request.body as Whizzes.Auth.SignUpPayload;
-
+        
         // commented for simplicity while testing user creation
         // if (!validate.isValidPassword(payload.password)) {
         //   reply.status(400);
@@ -181,7 +181,18 @@ function routes(
 
             trx.commit();
 
-            return reply.status(201).send(user);
+            const claims: Whizzes.TokenPayload = {
+              user: {
+                name: user[0].name,
+              },
+            };
+    
+            const token = fastify.jwt.sign(claims);
+
+            return reply.status(201).send({
+              token,
+              user: user[0],
+            });
           },
         );
       } catch (error) {
