@@ -1,5 +1,3 @@
-import type { Config } from 'knex';
-
 const {
   PGHOST = '127.0.0.1',
   POSTGRES_DB = 'whizzes',
@@ -7,7 +5,7 @@ const {
   POSTGRES_PASSWORD = 'whizzes',
 } = process.env;
 
-const config: Record<'production' | 'development' | 'testing', Config> = {
+const config: Record<'production' | 'development' | 'testing', unknown> = {
   production: {
     client: 'postgresql',
     connection: {
