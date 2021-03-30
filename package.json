@@ -1,0 +1,37 @@
+{
+  "name": "fastify-next-project",
+  "version": "0.1.0",
+  "main": "server.ts",
+  "repository": "https://github.com/EstebanBorai/fastify-next-project.git",
+  "author": "Esteban Borai <estebanborai@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc --outDir dist/ --esModuleInterop main.ts && next build",
+    "dev": "ts-node main.ts",
+    "eslint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "fmt": "eslint . --ext .js,.jsx,.ts,.tsx --fix && prettier --write \"**/*.{json,md,yml}\"",
+    "prettier": "prettier -c \"**/*.{md,json,yml,sh}\"",
+    "start": "node dist/main.js"
+  },
+  "devDependencies": {
+    "@types/node": "^14.14.25",
+    "@types/react": "^17.0.1",
+    "@types/react-dom": "^17.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.14.2",
+    "@typescript-eslint/parser": "^4.14.2",
+    "eslint": "^7.19.0",
+    "eslint-config-prettier": "^7.2.0",
+    "eslint-plugin-prettier": "^3.3.1",
+    "prettier": "^2.2.1",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.1.3"
+  },
+  "dependencies": {
+    "fastify": "^3.11.0",
+    "fastify-plugin": "^3.0.0",
+    "next": "^10.0.6",
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1",
+    "sass": "^1.32.6"
+  }
+}
