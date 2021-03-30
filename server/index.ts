@@ -6,10 +6,11 @@ import { config as readEnvFile } from 'dotenv';
 import knexfile from './config/knexfile';
 import router from './router';
 import knexPlugin from './plugins/knex';
+import nextPlugin from './plugins/next';
 
 import type { FastifyInstance } from 'fastify';
 
-export function makeServer(): FastifyInstance {
+export async function makeServer(): Promise<FastifyInstance> {
   if (process.env.NODE_ENV === 'development') {
     readEnvFile();
   }
@@ -20,18 +21,20 @@ export function makeServer(): FastifyInstance {
     logger: true,
   });
 
-  server.register(knexPlugin, knexfile[NODE_ENV]);
+  await server.register(knexPlugin, knexfile[NODE_ENV]);
 
-  server.register(cors, {
+  await server.register(cors, {
     origin: '*',
     methods: ['GET', 'POST'],
   });
 
-  server.register(fastifyJwt, {
-    secret: NODE_ENV === 'testing' ? 'secret' : JWT_SECRET,
+  await server.register(fastifyJwt, {
+    secret: NODE_ENV === 'test' ? 'secret' : JWT_SECRET,
   });
 
-  server.register(router);
+  await server.register(router);
+
+  await server.register(nextPlugin);
 
   return server;
 }

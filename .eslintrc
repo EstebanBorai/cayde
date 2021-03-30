@@ -6,9 +6,7 @@
   ],
   "extends": [
     "eslint:recommended",
-    "prettier/@typescript-eslint",
-    "plugin:@typescript-eslint/recommended",
-    "plugin:prettier/recommended"
+    "plugin:@typescript-eslint/recommended"
   ],
   "rules": {
     "indent": ["error", 2]

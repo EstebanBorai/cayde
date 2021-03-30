@@ -1,8 +1,8 @@
 {
-  "name": "fastify-next-project",
+  "name": "whizzes",
   "version": "0.1.0",
   "main": "server.ts",
-  "repository": "https://github.com/EstebanBorai/fastify-next-project.git",
+  "repository": "https://github.com/EstebanBorai/whizzes.git",
   "author": "Esteban Borai <estebanborai@gmail.com>",
   "license": "MIT",
   "maintainers": [
@@ -23,12 +23,15 @@
     }
   ],
   "scripts": {
-    "build": "tsc --outDir dist/ --esModuleInterop main.ts && next build",
-    "dev": "ts-node main.ts",
+    "build": "tsc && next build",
+    "dev": "NEXT_TELEMETRY_DISABLED=1 NODE_ENV=development DEBUG=knex.* env-cmd ts-node main.ts",
+    "dev:database": "bin/docker-development",
     "eslint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "fmt": "eslint . --ext .js,.jsx,.ts,.tsx --fix && prettier --write \"**/*.{json,md,yml}\"",
+    "knex": "env-cmd knex --knexfile config/knexfile.ts",
     "prettier": "prettier -c \"**/*.{md,json,yml,sh}\"",
-    "start": "node dist/main.js"
+    "start": "next start",
+    "tsnode": "ts-node"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
@@ -58,8 +61,8 @@
     "@typescript-eslint/parser": "^4.20.0",
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
+    "env-cmd": "^10.1.0",
     "eslint": "^7.23.0",
-    "eslint-config-prettier": "^8.1.0",
     "eslint-plugin-prettier": "^3.3.1",
     "light-my-request": "^4.4.1",
     "prettier": "^2.2.1",
