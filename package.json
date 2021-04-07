@@ -24,11 +24,11 @@
   ],
   "scripts": {
     "build": "tsc && next build",
-    "dev": "NEXT_TELEMETRY_DISABLED=1 NODE_ENV=development DEBUG=knex.* env-cmd ts-node main.ts",
+    "dev": "NEXT_TELEMETRY_DISABLED=1 NODE_ENV=development DEBUG=knex.* env-cmd ts-node ./src/infrastructure/server/main.ts",
     "dev:database": "bin/docker-development",
     "eslint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "fmt": "eslint . --ext .js,.jsx,.ts,.tsx --fix && prettier --write \"**/*.{json,md,yml}\"",
-    "knex": "env-cmd knex --knexfile config/knexfile.ts",
+    "knex": "env-cmd knex --knexfile ./src/config/database/knexfile.ts",
     "prettier": "prettier -c \"**/*.{md,json,yml,sh}\"",
     "start": "next start",
     "tsnode": "ts-node"
@@ -37,7 +37,6 @@
     "bcrypt": "^5.0.1",
     "fastify": "^3.14.1",
     "fastify-cors": "^5.2.0",
-    "fastify-jwt": "^2.4.0",
     "fastify-plugin": "^3.0.0",
     "knex-stringcase": "^1.4.5",
     "next": "^10.1.1",
