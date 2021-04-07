@@ -20,9 +20,7 @@ export default function (
   next: (err?: Error) => void,
 ): void {
   fastify.post('/', (request: FastifyRequest, reply: FastifyReply) => {
-    const createUserController = makeCreateUserUseCaseFromDbConn(fastify.knex);
-
-    return createUserController.execute(request, reply);
+    fastify.business.user.createUser.execute(request, reply);
   });
 
   next();

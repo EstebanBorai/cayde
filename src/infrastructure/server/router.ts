@@ -1,7 +1,7 @@
+import userRoutes from '../../modules/user/infrastructure/http/routes';
+
 import type {
   FastifyInstance,
-  FastifyReply,
-  FastifyRequest,
   RawRequestDefaultExpression,
   RawReplyDefaultExpression,
   FastifyPluginOptions,
@@ -17,8 +17,8 @@ export default function (
   _: FastifyPluginOptions,
   next: (err?: Error) => void,
 ): void {
-  fastify.get('/hello', (request: FastifyRequest, reply: FastifyReply) => {
-    reply.send('Hello');
+  fastify.register(userRoutes, {
+    prefix: 'api/users',
   });
 
   next();
