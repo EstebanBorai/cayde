@@ -10,6 +10,6 @@ import EntityID from './entity-id';
  */
 export default class AggregateRoot<T> extends Entity<T> {
   get id(): EntityID {
-    return this.id;
+    return this.entity_id;
   }
 }

@@ -22,12 +22,12 @@ export default class Repository implements UserRepository {
 
     if (!exists) {
       const data = UserMapper.intoStoreItem(user);
-      const result = await this.db('users').insert(data).returning('*').first();
+      const [ result ] = await this.db('users').insert(data).returning('*');
 
       return User.create({
         email: result.email,
         password: result.password,
-      });
+      }, result.id);
     }
 
     return null;
@@ -41,10 +41,14 @@ export default class Repository implements UserRepository {
     return UserMapper.intoDomain(result);
   }
 
-  public async findByEmail(email: string): Promise<User> {
+  public async findByEmail(email: string): Promise<User | undefined> {
     const result = await this.db('users').where({
       email,
     }).first();
+
+    if (!result) {
+      return undefined;
+    }
 
     return UserMapper.intoDomain(result);
   }

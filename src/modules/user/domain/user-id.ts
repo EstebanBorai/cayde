@@ -3,11 +3,11 @@ import EntityID from '../../../common/ddd/entity-id';
 
 
 export default class UserID extends Entity<unknown> {
-  get id (): EntityID {
+  get id(): EntityID {
     return this.entity_id;
   }
 
-  private constructor (id?: EntityID) {
+  private constructor(id?: EntityID) {
     super(null, id)
   }
 

@@ -1,4 +1,5 @@
 import ValueObject from '../../../common/ddd/value-object';
+import Result from '../../../common/primitives/result';
 
 export interface UserEmailProps {
   inner: string;
@@ -23,7 +24,13 @@ export default class UserEmail extends ValueObject<UserEmailProps> {
     return UserEmail.EMAIL_REGEXP.test(email);
   }
 
-  public static fromString(email: string): UserEmail {
-    throw new Error('Not Implemented');
+  public static fromString(email: string): Result<UserEmail> {
+    const sanitized = UserEmail.sanitize(email);
+
+    if (UserEmail.isValid(sanitized)) {
+      return Result.ok(new UserEmail({ inner: sanitized }));
+    }
+
+    return Result.err('The email provided does\'t have a valid format');
   }
 }

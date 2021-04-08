@@ -10,7 +10,12 @@ export interface UsersTableRow {
   password: string;
 }
 
-const UserMapper: Mapper<User, UserDTO, UsersTableRow> = {
+export interface UserPresentation {
+  id: string;
+  email: string;
+}
+
+const UserMapper: Mapper<User, UserDTO, UsersTableRow, UserPresentation> = {
   intoDTO(domain: User): UserDTO | Promise<UserDTO> {
     return {
       email: domain.email.inner,
@@ -27,11 +32,17 @@ const UserMapper: Mapper<User, UserDTO, UsersTableRow> = {
     const userEmail = UserEmail.fromString(raw.email as string);
     const userPassword = UserPassword.fromString(raw.password as string);
     const user = User.create({
-      email: userEmail,
-      password: userPassword,
+      email: userEmail.unwrap(),
+      password: userPassword.unwrap(),
     });
 
     return user;
+  },
+  intoPresentation(domain: User): UserPresentation {
+    return {
+      id: domain.userId,
+      email: domain.email.inner,
+    }
   }
 }
 

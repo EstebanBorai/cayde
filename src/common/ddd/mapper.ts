@@ -8,14 +8,16 @@
  * - An object from the persistance layer can be represented as a Domain Object (intoDomain)
  * - A Domain Object can be represented as a Persistance Layer Object (intoStoreItem)
  * - A Domain Object can be represented as a DTO (intoDTO)
+ * - A Domain Object can be represented as a Presentation Layer Object (intoPresentation)
  * 
  * Data Transfer Object
  * 
  * Object that carries data between two different systems. DTOs contain raw
  * data that could belong to a Domain Object such as an Entity for instance.
  */
-export default interface Mapper<DomainObject, DataTransferObject, PersistanceLayerObject> {
+export default interface Mapper<DomainObject, DataTransferObject, PersistanceLayerObject, Presentation> {
   intoDTO(domain: DomainObject): DataTransferObject | Promise<DataTransferObject>;
   intoStoreItem(domain: DomainObject): PersistanceLayerObject | Promise<PersistanceLayerObject>;
   intoDomain(raw: Record<string, unknown>): DomainObject | Promise<DomainObject>;
+  intoPresentation(domain: DomainObject): Presentation;
 }

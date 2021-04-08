@@ -25,10 +25,12 @@
   "scripts": {
     "build": "tsc && next build",
     "dev": "NEXT_TELEMETRY_DISABLED=1 NODE_ENV=development DEBUG=knex.* env-cmd ts-node ./src/infrastructure/server/main.ts",
-    "dev:database": "bin/docker-development",
+    "docker:database:start": "bin/docker-start.sh",
+    "docker:database:clean": "bin/docker-clean.sh",
     "eslint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "fmt": "eslint . --ext .js,.jsx,.ts,.tsx --fix && prettier --write \"**/*.{json,md,yml}\"",
     "knex": "env-cmd knex --knexfile ./src/config/database/knexfile.ts",
+    "knex:migrate:latest": "env-cmd knex --knexfile ./src/config/database/knexfile.ts migrate:latest",
     "prettier": "prettier -c \"**/*.{md,json,yml,sh}\"",
     "start": "next start",
     "tsnode": "ts-node"
