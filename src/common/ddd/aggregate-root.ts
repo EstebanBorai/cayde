@@ -8,8 +8,4 @@ import EntityID from './entity-id';
  * the only way to consume such members are by consuming the API of the
  * aggregate
  */
-export default class AggregateRoot<T> extends Entity<T> {
-  get id(): EntityID {
-    return this.entity_id;
-  }
-}
+export default class AggregateRoot<T> extends Entity<T> {}

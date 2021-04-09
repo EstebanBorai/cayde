@@ -3,18 +3,18 @@
  * 
  * An ID must be immutable, thus the value is encapsultated.
  */
-export default class ID<T> {
-  private value: T;
+export default class ID {
+  protected value: string;
 
-  constructor(value: T) {
+  constructor(value: string) {
     this.value = value;
   }
 
-  public inner(): T {
+  public idValue(): string {
     return this.value;
   }
 
-  public isEqual(id?: ID<T>): boolean {
+  public isEqual(id?: ID): boolean {
     if (id === null || id === undefined) {
       return false;
     }
@@ -23,6 +23,6 @@ export default class ID<T> {
       return false;
     }
 
-    return id.inner() === this.value;
+    return id.idValue() === this.value;
   }
 }

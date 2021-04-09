@@ -14,8 +14,8 @@ export default class User extends AggregateRoot<UserProps> {
     super(props, id);
   }
 
-  get userId(): UserID {
-    return UserID.fromEntityID(this.entity_id);
+  get userId(): string {
+    return UserID.from(this.entity_id).toString();
   }
 
   get email(): UserEmail {

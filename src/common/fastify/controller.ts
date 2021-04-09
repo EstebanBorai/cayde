@@ -27,8 +27,8 @@ export default abstract class FastifyController {
     }
   }
 
-  public internalServerError(reply: FastifyReply, error: string): Reply {
-    return FastifyController.messageReply(reply, 500, error || 'Internal Server Error');
+  public internalServerError(reply: FastifyReply, errorMessage: string): Reply {
+    return FastifyController.messageReply(reply, 500, errorMessage);
   }
 
   public notFound(reply: FastifyReply, message?: string): Reply {

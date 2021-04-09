@@ -18,7 +18,7 @@ export default class Repository implements UserRepository {
   }
 
   public async add(user: User): Promise<User> {
-    const exists = await this.findByEmail(user.email.inner);
+    const exists = await this.findByEmail(user.email.value);
 
     if (!exists) {
       const data = UserMapper.intoStoreItem(user);
@@ -54,7 +54,7 @@ export default class Repository implements UserRepository {
   }
 
   public async remove(user: User): Promise<void> {
-    const userId: string = user.id.inner();
+    const userId: string = user.userId;
     const exists = await this.findById(userId);
 
     if (!exists) {

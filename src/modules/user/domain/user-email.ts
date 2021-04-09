@@ -1,19 +1,19 @@
 import ValueObject from '../../../common/ddd/value-object';
-import Result from '../../../common/primitives/result';
+import { UserDomainError } from './user-domain-exception';
 
 export interface UserEmailProps {
-  inner: string;
+  email: string;
 }
 
 export default class UserEmail extends ValueObject<UserEmailProps> {
-  private static EMAIL_REGEXP = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
-
-  get inner() : string {
-    return this.props.inner;
-  }
-
   private constructor(props: UserEmailProps) {
     super(props);
+  }
+
+  private static EMAIL_REGEXP = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
+  get value() : string {
+    return this.props.email;
   }
 
   private static sanitize(email: string): string {
@@ -24,13 +24,13 @@ export default class UserEmail extends ValueObject<UserEmailProps> {
     return UserEmail.EMAIL_REGEXP.test(email);
   }
 
-  public static fromString(email: string): Result<UserEmail> {
+  public static fromString(email: string): UserEmail {
     const sanitized = UserEmail.sanitize(email);
 
     if (UserEmail.isValid(sanitized)) {
-      return Result.ok(new UserEmail({ inner: sanitized }));
+      return new UserEmail({ email: sanitized });
     }
 
-    return Result.err('The email provided does\'t have a valid format');
+    throw new UserDomainError.InvalidEmailFormat(email);
   }
 }

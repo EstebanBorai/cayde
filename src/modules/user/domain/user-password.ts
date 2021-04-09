@@ -1,19 +1,19 @@
 import ValueObject from '../../../common/ddd/value-object';
-import Result from '../../../common/primitives/result';
+import { UserDomainError } from './user-domain-exception';
 
 export interface UserPasswordProps {
-  inner: string;
+  password: string;
 }
 
 export default class UserPassword extends ValueObject<UserPasswordProps> {
-  private static PASSWORD_REGEXP = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8, 20}$/;
-
-  get inner() : string {
-    return this.props.inner;
-  }
-
   private constructor(props: UserPasswordProps) {
     super(props);
+  }
+
+  private static PASSWORD_REGEXP = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8, 20}$/;
+
+  get value() : string {
+    return this.props.password;
   }
 
   private static isValid(password: string): boolean {
@@ -21,11 +21,11 @@ export default class UserPassword extends ValueObject<UserPasswordProps> {
     return true;
   }
 
-  public static fromString(password: string): Result<UserPassword> {
+  public static fromString(password: string): UserPassword {
     if (UserPassword.isValid(password)) {
-      return Result.ok(new UserPassword({ inner: password }));
+      return new UserPassword({ password });
     }
 
-    return Result.err('Invalid password provided. Not secure');
+    throw new UserDomainError.InvalidPassword();
   }
 }
