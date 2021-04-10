@@ -24,6 +24,7 @@
   ],
   "scripts": {
     "build": "tsc && next build",
+    "build:tsc": "tsc",
     "dev": "NEXT_TELEMETRY_DISABLED=1 NODE_ENV=development DEBUG=knex.* env-cmd ts-node ./src/infrastructure/server/main.ts",
     "docker:database:start": "bin/docker-start.sh",
     "docker:database:clean": "bin/docker-clean.sh",
