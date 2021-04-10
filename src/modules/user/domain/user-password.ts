@@ -17,8 +17,7 @@ export default class UserPassword extends ValueObject<UserPasswordProps> {
   }
 
   private static isValid(password: string): boolean {
-    // return UserPassword.PASSWORD_REGEXP.test(password);
-    return true;
+    return UserPassword.PASSWORD_REGEXP.test(password);
   }
 
   public static fromString(password: string): UserPassword {

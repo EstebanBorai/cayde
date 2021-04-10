@@ -1,5 +1,3 @@
-import { makeCreateUserUseCaseFromDbConn } from '../../use-case/create-user';
-
 import type {
   FastifyInstance,
   FastifyReply,

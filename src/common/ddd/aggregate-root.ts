@@ -1,5 +1,4 @@
 import Entity from './entity';
-import EntityID from './entity-id';
 
 /**
  * Group multiple Entities and Value Objects together into one unit.
