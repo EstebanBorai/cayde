@@ -1,12 +1,12 @@
 import FastifyController from '../../../../common/fastify/controller';
 import CreateUserUseCase from './create-user-use-case';
 import CreateUserDTO from './create-user-dto';
-import UserMapper from '../../mapper';
+import UserMapper from '../../infrastructure/mapper';
+import EmailTakenError from '../../domain/error/email-taken-error';
 
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import type { RouteGenericInterface } from 'fastify/types/route';
 import type { Server, IncomingMessage, ServerResponse } from 'http';
-import { CreateUserError } from './create-user-error';
 
 export default class CreateUserController extends FastifyController {
   private useCase: CreateUserUseCase;
@@ -27,7 +27,7 @@ export default class CreateUserController extends FastifyController {
 
       return reply.send(responseBody);
     } catch (error) {
-      if (error instanceof CreateUserError.EmailTakenError) {
+      if (error instanceof EmailTakenError) {
         reply.status(400);
 
         return this.badRequest(reply, error.message);

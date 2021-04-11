@@ -1,6 +1,6 @@
 import CreateUserUseCase from './create-user-use-case';
 import CreateUserController from './create-user-controller';
-import UserRepository from '../../repository';
+import UserRepository from '../../infrastructure/repository';
 
 import type { Knex } from 'knex';
 

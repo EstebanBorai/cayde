@@ -1,8 +1,8 @@
-import AggregateRoot from '../../../common/ddd/aggregate-root';
-import EntityID from '../../../common/ddd/entity-id';
-import UserEmail from './user-email';
-import UserID from './user-id';
-import UserPassword from './user-password';
+import AggregateRoot from '../../../../common/ddd/aggregate-root';
+import EntityID from '../../../../common/ddd/entity-id';
+import UserEmail from './value-object/user-email';
+import UserID from './value-object/user-id';
+import UserPassword from './value-object/user-password';
 
 interface UserProps {
   email: UserEmail;

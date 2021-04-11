@@ -1,4 +1,4 @@
-import User from './domain/user';
+import User from '../domain/entity/user';
 import UserMapper from './mapper';
 
 import type { Knex } from 'knex';

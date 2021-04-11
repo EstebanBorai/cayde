@@ -1,5 +1,5 @@
-import ValueObject from '../../../common/ddd/value-object';
-import { UserDomainError } from './user-domain-exception';
+import ValueObject from '../../../../../common/ddd/value-object';
+import InvalidPassword from '../../error/invalid-password';
 
 export interface UserPasswordProps {
   password: string;
@@ -25,6 +25,6 @@ export default class UserPassword extends ValueObject<UserPasswordProps> {
       return new UserPassword({ password });
     }
 
-    throw new UserDomainError.InvalidPassword();
+    throw new InvalidPassword();
   }
 }

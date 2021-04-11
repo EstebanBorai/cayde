@@ -1,8 +1,8 @@
-import Mapper from '../../common/ddd/mapper';
-import User from './domain/user';
-import UserEmail from './domain/user-email';
-import UserPassword from './domain/user-password';
-import UserDTO from './dto';
+import Mapper from '../../../common/ddd/mapper';
+import User from '../domain/entity/user';
+import UserEmail from '../domain/entity/value-object/user-email';
+import UserPassword from '../domain/entity/value-object/user-password';
+import UserDTO from '../domain/dto';
 
 export interface UsersTableRow {
   id: string;

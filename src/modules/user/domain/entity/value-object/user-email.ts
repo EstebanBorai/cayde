@@ -1,5 +1,5 @@
-import ValueObject from '../../../common/ddd/value-object';
-import { UserDomainError } from './user-domain-exception';
+import ValueObject from '../../../../../common/ddd/value-object';
+import InvalidEmailFormat from '../../error/invalid-email-format';
 
 export interface UserEmailProps {
   email: string;
@@ -31,6 +31,6 @@ export default class UserEmail extends ValueObject<UserEmailProps> {
       return new UserEmail({ email: sanitized });
     }
 
-    throw new UserDomainError.InvalidEmailFormat(email);
+    throw new InvalidEmailFormat(email);
   }
 }

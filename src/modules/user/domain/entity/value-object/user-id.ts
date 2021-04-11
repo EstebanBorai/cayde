@@ -1,4 +1,4 @@
-import EntityID from '../../../common/ddd/entity-id';
+import EntityID from '../../../../../common/ddd/entity-id';
 
 
 export default class UserID extends EntityID {

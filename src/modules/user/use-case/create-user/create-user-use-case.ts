@@ -1,10 +1,10 @@
 import CreateUserDTO from './create-user-dto';
-import { UserRepository } from '../../repository';
-import { CreateUserError } from './create-user-error';
-import UserEmail from '../../domain/user-email';
-import UserPassword from '../../domain/user-password';
-import User from '../../domain/user';
+import { UserRepository } from '../../infrastructure/repository';
+import UserEmail from '../../domain/entity/value-object/user-email';
+import UserPassword from '../../domain/entity/value-object/user-password';
+import User from '../../domain/entity/user';
 import UseCase from '../../../../common/ddd/use-case';
+import EmailTakenError from '../../domain/error/email-taken-error';
 
 export default class CreateUserUseCase implements UseCase<CreateUserDTO, User> {
   private userRepository: UserRepository;
@@ -19,7 +19,7 @@ export default class CreateUserUseCase implements UseCase<CreateUserDTO, User> {
     const emailIsTaken = await this.userRepository.findByEmail(email.value);
 
     if (emailIsTaken) {
-      throw new CreateUserError.EmailTakenError(email.value);
+      throw new EmailTakenError(email.value);
     }
 
     const user = User.create({
