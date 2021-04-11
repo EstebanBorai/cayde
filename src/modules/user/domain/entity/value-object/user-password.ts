@@ -19,7 +19,7 @@ export default class UserPassword extends ValueObject<UserPasswordProps> {
    */
   private static PASSWORD_REGEXP = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/;
 
-  get value() : string {
+  get value(): string {
     return this.props.password;
   }
 
@@ -33,5 +33,9 @@ export default class UserPassword extends ValueObject<UserPasswordProps> {
     }
 
     throw new InvalidPassword();
+  }
+
+  public static isEqual(a: UserPassword, b: UserPassword): boolean {
+    return a.value === b.value;
   }
 }

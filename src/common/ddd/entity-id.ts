@@ -4,7 +4,7 @@ import ID from './id';
 
 /**
  * An Entity ID which is immutable.
- * 
+ *
  * Once an ID is created it can not be modified, the write access is reserved
  * and only read access is provided
  */

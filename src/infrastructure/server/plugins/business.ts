@@ -4,11 +4,14 @@ import { makeCreateUserUseCaseFromDbConn } from '../../../modules/user/use-case/
 
 import type { FastifyInstance } from 'fastify';
 import type CreateUserController from '../../../modules/user/use-case/create-user/create-user-controller';
+import type UpdateUserController from '../../../modules/user/use-case/update-user/update-user-controller';
+import { makeUpdaeUserUseCaseFromDbConn } from '../../../modules/user/use-case/update-user';
 
 export interface Business {
   user: {
-    createUser: CreateUserController,
-  }
+    createUser: CreateUserController;
+    updateUser: UpdateUserController;
+  };
 }
 
 async function businessPlugin(
@@ -19,8 +22,9 @@ async function businessPlugin(
   const business: Business = {
     user: {
       createUser: makeCreateUserUseCaseFromDbConn(fastify.knex),
-    }
-  }
+      updateUser: makeUpdaeUserUseCaseFromDbConn(fastify.knex),
+    },
+  };
 
   fastify.decorate('business', business);
 
@@ -30,7 +34,5 @@ async function businessPlugin(
 export default fp(businessPlugin, {
   fastify: '3.x',
   name: 'business-plugin',
-  dependencies: [
-    'knex-fastify-plugin',
-  ]
+  dependencies: ['knex-fastify-plugin'],
 });

@@ -1,24 +1,34 @@
 import FastifyController from '../../../../common/fastify/controller';
-import CreateUserUseCase from './create-user-use-case';
-import CreateUserDTO from './create-user-dto';
+import UpdateUserUseCase from './update-user-use-case';
+import UpdateUserDTO from './update-user-dto';
 import UserMapper from '../../infrastructure/mapper';
-import EmailTakenError from '../../domain/error/email-taken-error';
+import UserNotFoundError from '../../domain/error/user-not-found';
 
 import type { FastifyRequest, FastifyReply } from 'fastify';
 import type { RouteGenericInterface } from 'fastify/types/route';
 import type { Server, IncomingMessage, ServerResponse } from 'http';
+import DomainException from '../../../../common/ddd/domain-exception';
 
 export default class CreateUserController extends FastifyController {
-  private useCase: CreateUserUseCase;
+  private useCase: UpdateUserUseCase;
 
-  constructor(useCase: CreateUserUseCase) {
-    super('create-user-use-case');
+  constructor(useCase: UpdateUserUseCase) {
+    super('update-user-use-case');
 
     this.useCase = useCase;
   }
 
   protected async impl(
-    request: FastifyRequest<RouteGenericInterface, Server, IncomingMessage>,
+    request: FastifyRequest<
+      {
+        Params: {
+          id: string;
+        };
+        Body: UpdateUserDTO;
+      },
+      Server,
+      IncomingMessage
+    >,
     reply: FastifyReply<
       Server,
       IncomingMessage,
@@ -28,15 +38,22 @@ export default class CreateUserController extends FastifyController {
     >,
   ): Promise<unknown> {
     try {
-      const dto = request.body as CreateUserDTO;
+      const dto: UpdateUserDTO = {
+        id: request.params.id,
+        ...request.body,
+      };
       const user = await this.useCase.execute(dto);
       const responseBody = UserMapper.intoPresentation(user);
 
-      reply.status(201);
+      reply.status(200);
 
       return reply.send(responseBody);
     } catch (error) {
-      if (error instanceof EmailTakenError) {
+      if (error instanceof UserNotFoundError) {
+        return this.notFound(reply, error.message);
+      }
+
+      if (error instanceof DomainException) {
         return this.badRequest(reply, error.message);
       }
 

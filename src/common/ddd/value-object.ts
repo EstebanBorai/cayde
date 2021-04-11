@@ -1,14 +1,14 @@
 /**
  * Similar to Entity, a ValueObject also have properties and methods.
- * 
+ *
  * Attributes of a ValueObject are immutable, this implies that methods
  * on a ValueObject can only be readonly. Commands which change internal
  * state are not allowed.
- * 
+ *
  * Value objects don't have neither lifecycle or identify, and are compared
  * to eachother by comparing each of their attributes.
- * 
- * 
+ *
+ *
  */
 export default abstract class ValueObject<T> {
   public readonly props: T;

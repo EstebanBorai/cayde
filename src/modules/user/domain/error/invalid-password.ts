@@ -10,6 +10,11 @@ const PASSWORD_CONSTRAINTS = [
 
 export default class InvalidPassword extends DomainException {
   constructor() {
-    super('InvalidPassword', `The password provided does't accomplish policy requirements.\n${PASSWORD_CONSTRAINTS.concat('\n')}`);
+    super(
+      'InvalidPassword',
+      `The password provided does't accomplish policy requirements.\n${PASSWORD_CONSTRAINTS.concat(
+        '\n',
+      )}`,
+    );
   }
 }

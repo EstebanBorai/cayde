@@ -2,7 +2,13 @@ import type { FastifyReply, FastifyRequest } from 'fastify';
 import type { RouteGenericInterface } from 'fastify/types/route';
 import type { IncomingMessage, Server, ServerResponse } from 'http';
 
-type Reply = FastifyReply<Server, IncomingMessage, ServerResponse, RouteGenericInterface, unknown>;
+type Reply = FastifyReply<
+  Server,
+  IncomingMessage,
+  ServerResponse,
+  RouteGenericInterface,
+  unknown
+>;
 
 export default abstract class FastifyController {
   private implIdentifier: string;
@@ -11,13 +17,23 @@ export default abstract class FastifyController {
     this.implIdentifier = implIdentifier;
   }
 
-  private static messageReply(reply: FastifyReply, statusCode: number, message: string): Reply {
+  private static messageReply(
+    reply: FastifyReply,
+    statusCode: number,
+    message: string,
+  ): Reply {
     return reply.status(statusCode).send({ message });
   }
 
-  protected abstract impl(request: FastifyRequest, reply: FastifyReply): Promise<unknown>;
+  protected abstract impl(
+    request: FastifyRequest,
+    reply: FastifyReply,
+  ): Promise<unknown>;
 
-  public async execute(request: FastifyRequest, reply: FastifyReply): Promise<unknown> {
+  public async execute(
+    request: FastifyRequest,
+    reply: FastifyReply,
+  ): Promise<unknown> {
     try {
       return this.impl(request, reply);
     } catch (error) {

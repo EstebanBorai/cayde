@@ -1,6 +1,6 @@
 /**
  * Generic ID used application wide.
- * 
+ *
  * An ID must be immutable, thus the value is encapsultated.
  */
 export default class ID {

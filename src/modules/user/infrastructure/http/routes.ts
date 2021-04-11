@@ -21,5 +21,9 @@ export default function (
     fastify.business.user.createUser.execute(request, reply);
   });
 
+  fastify.put('/:id', (request: FastifyRequest, reply: FastifyReply) => {
+    fastify.business.user.updateUser.execute(request, reply);
+  });
+
   next();
 }

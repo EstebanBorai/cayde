@@ -16,34 +16,37 @@ export interface UserPresentation {
 }
 
 const UserMapper: Mapper<User, UserDTO, UsersTableRow, UserPresentation> = {
-  intoDTO(domain: User): UserDTO | Promise<UserDTO> {
+  intoDTO(domain: User): UserDTO {
     return {
       email: domain.email.value,
-    }
+    };
   },
-  intoStoreItem(domain: User): UsersTableRow | Promise<UsersTableRow> {
+  intoStoreItem(domain: User): UsersTableRow {
     return {
-      id: domain.userId,
+      id: domain.userId.idValue(),
       email: domain.email.value,
       password: domain.password.value,
-    }
+    };
   },
-  intoDomain(raw: Record<string, unknown>): User | Promise<User> {
+  intoDomain(raw: Record<string, unknown>): User {
     const userEmail = UserEmail.fromString(raw.email as string);
     const userPassword = UserPassword.fromString(raw.password as string);
-    const user = User.create({
-      email: userEmail,
-      password: userPassword,
-    }, raw.id as string);
+    const user = User.create(
+      {
+        email: userEmail,
+        password: userPassword,
+      },
+      raw.id as string,
+    );
 
     return user;
   },
   intoPresentation(domain: User): UserPresentation {
     return {
-      id: domain.userId,
+      id: domain.userId.idValue(),
       email: domain.email.value,
-    }
-  }
-}
+    };
+  },
+};
 
 export default UserMapper;

@@ -16,7 +16,7 @@ export default class CreateUserUseCase implements UseCase<CreateUserDTO, User> {
   public async execute(input: CreateUserDTO): Promise<User> {
     const email = UserEmail.fromString(input.email);
     const password = UserPassword.fromString(input.password);
-    const emailIsTaken = await this.userRepository.findByEmail(email.value);
+    const emailIsTaken = await this.userRepository.findByEmail(email);
 
     if (emailIsTaken) {
       throw new EmailTakenError(email.value);
