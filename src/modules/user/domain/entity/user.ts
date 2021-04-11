@@ -10,7 +10,7 @@ interface UserProps {
 }
 
 export default class User extends AggregateRoot<UserProps> {
-  private constructor(props: UserProps, id?: EntityID) {
+  private constructor(props: UserProps, id?: EntityID | string) {
     super(props, id);
   }
 
@@ -26,7 +26,7 @@ export default class User extends AggregateRoot<UserProps> {
     return this.props.password;
   }
 
-  public static create(props: UserProps, id?: EntityID): User {
+  public static create(props: UserProps, id?: EntityID | string): User {
     const user = new User({
       ...props,
     }, id);

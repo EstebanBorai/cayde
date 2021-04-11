@@ -34,7 +34,7 @@ const UserMapper: Mapper<User, UserDTO, UsersTableRow, UserPresentation> = {
     const user = User.create({
       email: userEmail,
       password: userPassword,
-    });
+    }, raw.id as string);
 
     return user;
   },

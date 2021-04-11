@@ -24,10 +24,7 @@ export default class Repository implements UserRepository {
       const data = UserMapper.intoStoreItem(user);
       const [ result ] = await this.db('users').insert(data).returning('*');
 
-      return User.create({
-        email: result.email,
-        password: result.password,
-      }, result.id);
+      return UserMapper.intoDomain(result);
     }
 
     return null;

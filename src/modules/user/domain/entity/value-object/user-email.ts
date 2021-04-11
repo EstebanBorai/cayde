@@ -12,7 +12,7 @@ export default class UserEmail extends ValueObject<UserEmailProps> {
 
   private static EMAIL_REGEXP = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
 
-  get value() : string {
+  get value(): string {
     return this.props.email;
   }
 
