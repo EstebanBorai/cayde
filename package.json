@@ -26,7 +26,7 @@
     "build": "yarn build:client && yarn build:server",
     "build:client": "NEXT_TELEMETRY_DISABLED=1 next build ./src/infrastructure/client",
     "build:server": "tsc",
-    "dev": "NEXT_TELEMETRY_DISABLED=1 NODE_ENV=development DEBUG=knex.* env-cmd ts-node ./src/infrastructure/server/main.ts",
+    "dev": "NEXT_TELEMETRY_DISABLED=1 NODE_ENV=development DEBUG=knex.* env-cmd ts-node-dev --respawn --transpile-only ./src/infrastructure/server/main.ts",
     "docker:database:start": "bin/docker-start.sh",
     "docker:database:clean": "bin/docker-clean.sh",
     "eslint": "eslint . --ext .js,.jsx,.ts,.tsx",

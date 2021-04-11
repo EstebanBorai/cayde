@@ -10,7 +10,14 @@ export default class UserPassword extends ValueObject<UserPasswordProps> {
     super(props);
   }
 
-  private static PASSWORD_REGEXP = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&-+=()])(?=\\S+$).{8, 20}$/;
+  /**
+   * (?=.*?[A-Z]) : At least one upper case
+   * (?=.*?[a-z]) : At least one lower case
+   * (?=.*?[0-9]) : At least one digit
+   * (?=.*?[#?!@$ %^&*-]) : At least one special character or space
+   * .{8,} : Minimum eight characters
+   */
+  private static PASSWORD_REGEXP = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/;
 
   get value() : string {
     return this.props.password;
