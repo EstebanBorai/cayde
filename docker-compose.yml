@@ -1,18 +1,23 @@
 version: '3'
 
 services:
+  api:
+    build: ./docker/api
+    ports:
+      - '3000:3000'
+    volumes:
+      - "$PWD:/app"
+    env_file:
+      - .env
+
   database:
-    build: ./docker
+    build: ./docker/database
     ports:
       - '5432:5432'
     volumes:
       - whizzes-database:/var/lib/postgresql/data
     env_file:
       - .env
-    environment:
-      POSTGRES_USER: '${POSTGRES_USER}'
-      POSTGRES_PASSWORD: '${POSTGRES_PASSWORD}'
-      POSTGRES_DB: '${POSTGRES_DB}'
 
 volumes:
   whizzes-database:

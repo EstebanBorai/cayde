@@ -18,7 +18,9 @@ export default fp(
     });
     const handle = app.getRequestHandler();
 
-    await app.prepare();
+    // do not await on this to avoid `ERR_AVVIO_PLUGIN_TIMEOUT`
+    // erorr to be thrown
+    app.prepare();
 
     if (dev) {
       fastify.get('/_next/*', (req, reply) => {

@@ -32,7 +32,7 @@ import type { FastifyInstance } from 'fastify';
   await server.register(businessPlugin);
   await server.register(router);
 
-  server.listen(PORT || 3000, (err) => {
+  server.listen(PORT, '0.0.0.0', (err) => {
     if (err) throw err;
   });
 })();
