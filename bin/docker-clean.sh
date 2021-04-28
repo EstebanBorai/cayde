@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker volume rm whizzes-database && docker-compose rm -fv database
+docker volume rm teatime-database && docker-compose rm -fv database

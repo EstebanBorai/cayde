@@ -1,8 +1,8 @@
 const {
   PGHOST = '127.0.0.1',
-  POSTGRES_DB = 'whizzes',
-  POSTGRES_USER = 'whizzes',
-  POSTGRES_PASSWORD = 'whizzes',
+  POSTGRES_DB = 'teatime',
+  POSTGRES_USER = 'teatime',
+  POSTGRES_PASSWORD = 'teatime',
 } = process.env;
 
 const defaultConfig = {

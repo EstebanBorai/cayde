@@ -1,8 +1,10 @@
+import React from 'react';
+
 export default function Home(): JSX.Element {
   return (
     <section>
-      <h1>Whizzes</h1>
-      <strong>Welcome to Whizzes</strong>
+      <h1>teatime</h1>
+      <strong>Welcome to teatime</strong>
     </section>
   );
 }

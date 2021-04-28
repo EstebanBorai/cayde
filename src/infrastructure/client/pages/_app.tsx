@@ -2,7 +2,7 @@ import Layout from '../components/Layout';
 
 import type { NextComponentType } from 'next';
 
-import '../styles/global.scss';
+import 'tailwindcss/tailwind.css';
 
 function App({
   Component,

@@ -7,6 +7,7 @@ import router from './router';
 import businessPlugin from './plugins/business';
 import knexPlugin from './plugins/knex';
 import nextPlugin from './plugins/next';
+import brandLog from './utils/brand-log';
 
 import type { FastifyInstance } from 'fastify';
 
@@ -34,5 +35,6 @@ import type { FastifyInstance } from 'fastify';
 
   server.listen(PORT, '0.0.0.0', (err) => {
     if (err) throw err;
+    brandLog();
   });
 })();

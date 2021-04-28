@@ -1,3 +1,3 @@
-Write-Host "Removing whizzes-database volume and related Docker containers"
+Write-Host "Removing teatime-database volume and related Docker containers"
 
-docker volume rm whizzes-database; docker-compose rm -fv database
+docker volume rm teatime-database; docker-compose rm -fv database

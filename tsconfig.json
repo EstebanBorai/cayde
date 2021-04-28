@@ -15,7 +15,7 @@
     "jsx": "preserve"
   },
   "exclude": ["node_modules"],
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "include": ["twin.d.ts", "next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "ts-node": {
     "transpileOnly": true
   }

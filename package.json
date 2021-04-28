@@ -1,8 +1,8 @@
 {
-  "name": "whizzes",
+  "name": "teatime",
   "version": "0.1.0",
   "main": "server.ts",
-  "repository": "https://github.com/EstebanBorai/whizzes.git",
+  "repository": "https://github.com/EstebanBorai/teatime.git",
   "author": "Esteban Borai <estebanborai@gmail.com>",
   "license": "MIT",
   "maintainers": [
@@ -22,6 +22,14 @@
       "url": "https://github.com/jonylugos"
     }
   ],
+  "babelMacros": {
+    "twin": {
+      "preset": "styled-components"
+    }
+  },
+  "resolutions": {
+    "styled-components": "^5"
+  },
   "scripts": {
     "build": "yarn build:client && yarn build:server",
     "build:client": "NEXT_TELEMETRY_DISABLED=1 next build ./src/infrastructure/client",
@@ -50,7 +58,8 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "reflect-metadata": "^0.1.13",
-    "sass": "^1.32.8",
+    "styled-components": "^5.2.3",
+    "twin.macro": "^2.4.0",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -60,17 +69,22 @@
     "@types/node": "^14.14.37",
     "@types/react": "^17.0.3",
     "@types/react-dom": "^17.0.3",
+    "@types/styled-components": "^5.1.9",
     "@types/tape": "^4.13.0",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.20.0",
     "@typescript-eslint/parser": "^4.20.0",
+    "autoprefixer": "^10.2.5",
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
     "env-cmd": "^10.1.0",
     "eslint": "^7.23.0",
     "eslint-plugin-prettier": "^3.3.1",
     "light-my-request": "^4.4.1",
+    "postcss": "^8.2.13",
+    "postcss-import": "^14.0.1",
     "prettier": "^2.2.1",
+    "tailwindcss": "^2.1.2",
     "tape": "^5.2.2",
     "ts-node-dev": "^1.1.6",
     "typescript": "^4.2.3"

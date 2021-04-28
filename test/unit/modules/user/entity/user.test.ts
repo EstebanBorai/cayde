@@ -7,7 +7,7 @@ import UserPassword from '../../../../../src/modules/user/domain/entity/value-ob
 import type { Test } from 'tape';
 
 test('creates an user', async (t: Test): Promise<void> => {
-  const email = UserEmail.fromString('johnappleseed@whizzes.com');
+  const email = UserEmail.fromString('johnappleseed@teatime.com');
   const password = await UserPassword.fromString('Root@12A');
   const user = User.create({
     email,
@@ -16,6 +16,6 @@ test('creates an user', async (t: Test): Promise<void> => {
 
   t.true(email.isEqual(user.email));
   t.true(password.isEqual(user.password));
-  t.equals(email.value, 'johnappleseed@whizzes.com');
+  t.equals(email.value, 'johnappleseed@teatime.com');
   t.end();
 });

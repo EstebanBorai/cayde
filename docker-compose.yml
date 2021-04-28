@@ -15,9 +15,9 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - whizzes-database:/var/lib/postgresql/data
+      - teatime-database:/var/lib/postgresql/data
     env_file:
       - .env
 
 volumes:
-  whizzes-database:
+  teatime-database:
