@@ -35,6 +35,7 @@
     "knex:migrate:latest": "env-cmd knex --knexfile ./src/config/database/knexfile.ts migrate:latest",
     "prettier": "prettier -c \"**/*.{json,md,yml,ts,tsx}\"",
     "start": "NEXT_TELEMETRY_DISABLED=1 next start",
+    "test": "ts-node --files node_modules/tape/bin/tape test/unit/**/*.test.ts",
     "tsnode": "ts-node",
     "debug": "NEXT_TELEMETRY_DISABLED=1 NODE_ENV=development DEBUG=knex.* env-cmd node --inspect -r ts-node/register ./src/infrastructure/server/main.ts"
   },
