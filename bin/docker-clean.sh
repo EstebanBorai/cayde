@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker volume rm teatime-database && docker-compose rm -fv database
+docker volume rm cayde-database && docker-compose rm -fv database

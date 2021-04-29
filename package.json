@@ -1,8 +1,8 @@
 {
-  "name": "teatime",
+  "name": "cayde",
   "version": "0.1.0",
   "main": "server.ts",
-  "repository": "https://github.com/EstebanBorai/teatime.git",
+  "repository": "https://github.com/EstebanBorai/cayde.git",
   "author": "Esteban Borai <estebanborai@gmail.com>",
   "license": "MIT",
   "maintainers": [

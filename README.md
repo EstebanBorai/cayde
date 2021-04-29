@@ -1,4 +1,8 @@
-# teatime
+# cayde
+
+## About the name
+
+The name is inspired in Destiny's (The Game), Cayde-6 character.
 
 ## Development
 

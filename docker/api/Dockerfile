@@ -4,6 +4,6 @@ WORKDIR /app
 
 COPY ./ /app
 
-RUN yarn
+RUN yarn install
 
 CMD ["yarn", "dev"]

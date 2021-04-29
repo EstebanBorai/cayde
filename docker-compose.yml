@@ -15,9 +15,9 @@ services:
     ports:
       - '5432:5432'
     volumes:
-      - teatime-database:/var/lib/postgresql/data
+      - cayde-database:/var/lib/postgresql/data
     env_file:
       - .env
 
 volumes:
-  teatime-database:
+  cayde-database:

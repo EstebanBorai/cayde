@@ -1,3 +1,3 @@
-Write-Host "Removing teatime-database volume and related Docker containers"
+Write-Host "Removing cayde-database volume and related Docker containers"
 
-docker volume rm teatime-database; docker-compose rm -fv database
+docker volume rm cayde-database; docker-compose rm -fv database
