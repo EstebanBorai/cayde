@@ -6,6 +6,42 @@ The name is inspired in Destiny's (The Game), Cayde-6 character.
 
 ## Development
 
+Theres two ways to run this project either by using Docker (Docker Compose)
+or using straight NodeJS commands
+
+### Running with NodeJS (Yarn)
+
+```bash
+# install dependencies using `yarn install`
+yarn install
+
+# run local development environment
+yarn dev
+
+# this output should be printed to stdout
+
+yarn dev
+yarn run v1.22.10
+$ NEXT_TELEMETRY_DISABLED=1 NODE_ENV=development DEBUG=knex.* env-cmd ts-node-dev --ignore-watch ./src/infrastructure/client --transpile-only ./src/infrastructure/server/main.ts
+[INFO] 20:17:57 ts-node-dev ver. 1.1.6 (using ts-node ver. 9.1.1, typescript ver. 4.2.3)
+{"level":30, "msg":"Server listening at http://0.0.0.0:3000"}
+                                 ▄▄
+                               ▀███
+                                 ██
+ ▄██▀██ ▄█▀██▄ ▀██▀   ▀██▀  ▄█▀▀███   ▄▄█▀██
+██▀  ████   ██   ██   ▄█  ▄██    ██  ▄█▀   ██
+██      ▄█████    ██ ▄█   ███    ██  ██▀▀▀▀▀▀
+██▄    ▄█   ██     ███    ▀██    ██  ██▄    ▄
+ █████▀▀████▀██▄   ▄█      ▀████▀███▄ ▀█████▀
+                 ▄█
+               ██▀
+info  - Using webpack 4. Reason: future.webpack5 option not enabled https://nextjs.org/docs/messages/webpack5
+info  - Using external babel configuration from cayde/.babelrc
+event - compiled successfully
+```
+
+### Running with Docker
+
 This application makes use of Docker and Docker Compose for execution.
 
 ```bash

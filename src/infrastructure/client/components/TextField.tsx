@@ -22,12 +22,12 @@ const Label = styled.label`
 `;
 
 const Input = styled.input<{ error: string; }>`
-  ${(props) => !!props.error ? tw`border-red-400` : tw`border-gray-200`};
+  ${(props) => props.error ? tw`border-red-400` : tw`border-gray-200`};
   ${tw`bg-gray-50 px-4 py-2.5 rounded outline-none`};
   ${tw`border  mb-1`};
 
   &:hover, &:focuse, &:active {
-    ${(props) => !!props.error ? tw`border-red-400` : tw`border-gray-200`};
+    ${(props) => props.error ? tw`border-red-400` : tw`border-gray-200`};
   }
 
   &:hover {
