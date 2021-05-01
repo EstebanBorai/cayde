@@ -10,7 +10,7 @@ type Props = {
   hint?: string;
   value: string | number;
   tabIndex?: number;
-  onChange(): void;
+  onChange: React.ChangeEventHandler<HTMLInputElement>;
 }
 
 const TextFieldWrapper = styled.div`
