@@ -13,3 +13,12 @@ export function makeCreateUserUseCaseFromDbConn(
 
   return controller;
 }
+
+export function makeCreateUserUseCase(
+  dbConn: Knex,
+): CreateUserUseCase {
+  const repository = new UserRepository(dbConn);
+  const useCase = new CreateUserUseCase(repository);
+
+  return useCase;
+}

@@ -7,6 +7,7 @@ import type { Knex } from 'knex';
 
 export interface UserRepository {
   add(user: User): Promise<User>;
+  findAll(): Promise<User[]>;
   findById(id: UserID): Promise<User>;
   findByEmail(email: UserEmail): Promise<User>;
   remove(user: User): Promise<void>;
@@ -31,6 +32,16 @@ export default class Repository implements UserRepository {
     }
 
     return null;
+  }
+
+  public async findAll(): Promise<User[]> {
+    const result = await this.db('users');
+
+    if (result.length === 0) {
+      return [];
+    }
+
+    return result.map((userRow) => UserMapper.intoDomain(userRow));
   }
 
   public async findById(id: UserID): Promise<User> {
