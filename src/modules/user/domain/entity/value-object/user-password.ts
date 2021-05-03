@@ -1,3 +1,5 @@
+import bcrypt from 'bcrypt';
+
 import ValueObject from '../../../../../common/ddd/value-object';
 import InvalidPassword from '../../error/invalid-password';
 
@@ -19,6 +21,8 @@ export default class UserPassword extends ValueObject<UserPasswordProps> {
    */
   private static PASSWORD_REGEXP = /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$ %^&*-]).{8,}$/;
 
+  private static SALT_COST_FACTOR = 16;
+
   get value(): string {
     return this.props.password;
   }
@@ -27,9 +31,13 @@ export default class UserPassword extends ValueObject<UserPasswordProps> {
     return UserPassword.PASSWORD_REGEXP.test(password);
   }
 
-  public static fromString(password: string): UserPassword {
+  public static async fromString(password: string): Promise<UserPassword> {
     if (UserPassword.isValid(password)) {
-      return new UserPassword({ password });
+      const hashed = await UserPassword.hash(password);
+
+      return new UserPassword({
+        password: hashed,
+      });
     }
 
     throw new InvalidPassword();
@@ -37,5 +45,13 @@ export default class UserPassword extends ValueObject<UserPasswordProps> {
 
   public static isEqual(a: UserPassword, b: UserPassword): boolean {
     return a.value === b.value;
+  }
+
+  private static async hash(raw: string): Promise<string> {
+    return bcrypt.hash(raw, UserPassword.SALT_COST_FACTOR);
+  }
+
+  public async compare(plain: string): Promise<boolean> {
+    return bcrypt.compare(plain, this.props.password);
   }
 }

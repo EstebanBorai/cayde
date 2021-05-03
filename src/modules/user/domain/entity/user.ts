@@ -40,12 +40,12 @@ export default class User extends AggregateRoot<UserProps> {
     return user;
   }
 
-  public update(props: Record<string, unknown>): User {
+  public async update(props: Record<string, unknown>): Promise<User> {
     let userPassword: UserPassword | null = null;
 
     if (props.password) {
-      const password = UserPassword.fromString(props.password as string);
-      const repeatPassword = UserPassword.fromString(
+      const password = await UserPassword.fromString(props.password as string);
+      const repeatPassword = await UserPassword.fromString(
         props.repeatPassword as string,
       );
 

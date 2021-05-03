@@ -15,9 +15,10 @@ export interface UserPresentation {
   email: string;
 }
 
-const UserMapper: Mapper<User, UserDTO, UsersTableRow, UserPresentation> = {
+const UserMapper: Mapper<User | Promise<User>, UserDTO, UsersTableRow, UserPresentation> = {
   intoDTO(domain: User): UserDTO {
     return {
+      id: domain.userId.toString(),
       email: domain.email.value,
     };
   },
@@ -28,9 +29,9 @@ const UserMapper: Mapper<User, UserDTO, UsersTableRow, UserPresentation> = {
       password: domain.password.value,
     };
   },
-  intoDomain(raw: Record<string, unknown>): User {
+  async intoDomain(raw: Record<string, unknown>): Promise<User> {
     const userEmail = UserEmail.fromString(raw.email as string);
-    const userPassword = UserPassword.fromString(raw.password as string);
+    const userPassword = await UserPassword.fromString(raw.password as string);
     const user = User.create(
       {
         email: userEmail,
